@@ -1,23 +1,27 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>My Assets</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>أصولي</h2>
-  <div id="content"></div>
-  <p>
-    <a href="member.html">العضو</a> |
-    <a href="ai-power.html">AI Power</a> |
-    <a href="team.html">فريقي</a> |
-    <a href="runs.html">سجلات التشغيل</a> |
-    <a href="deposit.html">إيداع</a> |
-    <a href="withdraw.html">سحب</a> |
-    <a href="bills.html">الفواتير</a>
-  </p>
-  <p><button id="logoutBtn">خروج</button></p>
+  <div class="header">JS Only System</div>
+  <div class="container">
+    <h2>أصولي</h2>
+    <div id="content"></div>
+    <p>
+      <a href="member.html">العضو</a> |
+      <a href="ai-power.html">AI Power</a> |
+      <a href="team.html">فريقي</a> |
+      <a href="runs.html">سجلات التشغيل</a> |
+      <a href="deposit.html">إيداع</a> |
+      <a href="withdraw.html">سحب</a> |
+      <a href="bills.html">الفواتير</a>
+    </p>
+    <p><button id="logoutBtn">خروج</button></p>
+  </div>
   <script src="auth.js"></script>
   <script>
     function render(){

@@ -1,18 +1,22 @@
 <!doctype html>
-<html lang="ار">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Deposit</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>إيداع وهمي</h2>
-  <form id="f">
-    <label>المبلغ: <input type="number" id="amount" min="1" step="0.01" required></label>
-    <button type="submit">إيداع</button>
-  </form>
-  <p id="msg"></p>
-  <p><a href="my-assets.html">العودة</a></p>
+  <div class="header">JS Only System</div>
+  <div class="container">
+    <h2>إيداع وهمي</h2>
+    <form id="f">
+      <label>المبلغ: <input type="number" id="amount" min="1" step="0.01" required></label>
+      <button type="submit">إيداع</button>
+    </form>
+    <p id="msg"></p>
+    <p><a href="my-assets.html">العودة</a></p>
+  </div>
   <script src="auth.js"></script>
   <script>
     const user = Auth.getCurrentUser();
