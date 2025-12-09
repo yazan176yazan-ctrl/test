@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My Team</title>
+</head>
+<body>
+  <h2>فريقي (3 أجيال)</h2>
+  <div id="team"></div>
+  <p><a href="my-assets.html">العودة</a></p>
+  <script src="auth.js"></script>
+  <script>
+    const user = Auth.getCurrentUser();
+    if(!user) window.location.href='login.html';
+    const t = Auth.getTeam(user.id);
+    function renderList(list){
+      if(!list || list.length===0) return '<p>لا أعضاء</p>';
+      return '<ul>'+list.map(u=>`<li>${u.phone} - ${u.inviterCode} - رصيد: ${u.balance.toFixed(2)}</li>`).join('')+'</ul>';
+    }
+    document.getElementById('team').innerHTML = `
+      <h3>الجيل الأول</h3>
+      ${renderList(t.gen1)}
+      <h3>الجيل الثاني</h3>
+      ${renderList(t.gen2)}
+      <h3>الجيل الثالث</h3>
+      ${renderList(t.gen3)}
+    `;
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Run Records</title>
+</head>
+<body>
+  <h2>سجل التشغيل</h2>
+  <div id="list"></div>
+  <p><a href="my-assets.html">العودة</a></p>
+  <script src="auth.js"></script>
+  <script>
+    const user = Auth.getCurrentUser();
+    if(!user) window.location.href='login.html';
+    const runs = Auth.getRunsForUser(user.id);
+    if(runs.length===0) document.getElementById('list').innerHTML='<p>لا سجلات بعد</p>';
+    else document.getElementById('list').innerHTML = '<ul>'+runs.map(r=>`<li>${r.timestamp} - ${r.profitAmount}</li>`).join('')+'</ul>';
+  </script>
+</body>
+</html>
