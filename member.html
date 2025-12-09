@@ -4,25 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Member</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header">JS Only System</div>
-  <div class="container">
-    <h2>بيانات العضو</h2>
-    <div id="info"></div>
-    <p><a href="my-assets.html">العودة</a></p>
-  </div>
+  <h2>بيانات العضو</h2>
+  <div id="info"></div>
+  <p><a href="my-assets.html">العودة</a></p>
   <script src="auth.js"></script>
   <script>
     const user = Auth.getCurrentUser();
     if(!user) window.location.href='login.html';
-    document.getElementById('info').innerHTML = `
-      <p>الهاتف: ${user.phone}</p>
-      <p>كود الدعوة: ${user.inviterCode}</p>
-      <p>المُدعِي: ${user.inviterId || 'لا يوجد'}</p>
-      <p>تاريخ الإنشاء: ${user.createdAt}</p>
-    `;
+    document.getElementById('info').innerHTML = `\n      <p>الهاتف: ${user.phone}</p>\n      <p>كود الدعوة: ${user.inviterCode}</p>\n      <p>المُدعِي: ${user.inviterId || 'لا يوجد'}</p>\n      <p>تاريخ الإنشاء: ${user.createdAt}</p>\n    `;
   </script>
 </body>
 </html>

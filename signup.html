@@ -3,22 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sign Up</title>
-  <link rel="stylesheet" href="style.css">
+  <title>تسجيل جديد</title>
 </head>
 <body>
-  <div class="header">JS Only System</div>
-  <div class="container">
-    <h2>تسجيل جديد</h2>
-    <form id="signupForm">
-      <label>الهاتف: <input type="text" id="phone" required></label>
-      <label>كلمة المرور: <input type="password" id="password" required></label>
-      <label>كود الدعوة (اختياري): <input type="text" id="inviterCode"></label>
-      <button type="submit">تسجيل</button>
-    </form>
-    <p id="msg" style="color:red"></p>
-    <p><a href="login.html">العودة لتسجيل الدخول</a></p>
-  </div>
+  <h2>تسجيل جديد</h2>
+  <form id="signupForm">
+    <label>الهاتف: <input type="text" id="phone" required></label><br>
+    <label>كلمة المرور: <input type="password" id="password" required></label><br>
+    <label>كود الدعوة (اختياري): <input type="text" id="inviterCode"></label><br>
+    <button type="submit">تسجيل</button>
+  </form>
+  <p id="msg" style="color:red"></p>
+  <p><a href="login.html">العودة لتسجيل الدخول</a></p>
   <script src="auth.js"></script>
   <script>
     document.getElementById('signupForm').addEventListener('submit', function(e){
