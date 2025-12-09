@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Account Information</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    :root {
+      --page-bg: #0C0B10;
+      --card-bg: #17202D;
+      --card-inner-bg: #050812;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.55);
+      --accent: #00d1ff;
+      --border-subtle: #233246;
+      --row-divider: #151b26;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--page-bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--page-bg);
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background: #000000;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      margin-right: 8px;
+      background: rgba(11, 12, 16, 0.95);
+    }
+
+    .back-arrow {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      transform: rotate(45deg);
+    }
+
+    .app-header-title {
+      flex: 1;
+      text-align: center;
+      margin-right: 40px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .app-main {
+      padding: 16px 12px 24px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 10px 14px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .row + .row {
+      border-top: 1px solid var(--row-divider);
+    }
+
+    .label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .value {
+      font-size: 13px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .value-link {
+      font-size: 13px;
+      color: var(--text-primary);
+      border-bottom: 0.5px solid var(--text-primary);
+      padding-bottom: 1px;
+    }
+
+    .value-accent {
+      color: var(--accent);
+    }
+
+    .avatar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #333a4c;
+      background-color: var(--card-inner-bg);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .chevron {
+      width: 6px;
+      height: 6px;
+      border-right: 1px solid var(--text-secondary);
+      border-bottom: 1px solid var(--text-secondary);
+      transform: rotate(-45deg);
+      margin-left: 2px;
+    }
+
+    .copy-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copy-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid var(--text-secondary);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .copy-icon::before,
+    .copy-icon::after {
+      content: "";
+      position: absolute;
+      border: 1px solid var(--text-secondary);
+      border-radius: 2px;
+    }
+
+    .copy-icon::before {
+      width: 8px;
+      height: 6px;
+      left: 3px;
+      top: 3px;
+      border-top: 1px solid transparent;
+      border-left: 1px solid transparent;
+    }
+
+    .copy-icon::after {
+      width: 8px;
+      height: 6px;
+      left: 1px;
+      top: 1px;
+      border-bottom: 1px solid transparent;
+      border-right: 1px solid transparent;
+    }
+
+    .toast-message {
+      position: fixed;
+      left: 50%;
+      top: 110px;
+      transform: translate(-50%, -10px);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.82);
+      color: #ffffff;
+      font-size: 12px;
+      line-height: 1.4;
+      max-width: 80%;
+      text-align: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .toast-message.toast-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+        overflow: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <a href="javascript:history.back()" class="back-btn">
+        <div class="back-arrow"></div>
+      </a>
+      <div class="app-header-title">Account Information</div>
+    </header>
+
+    <main class="app-main">
+      <section class="content">
+        <!-- Card 1 -->
+        <section class="card">
+          <div class="row">
+            <div class="label">Profile Picture</div>
+            <div class="avatar-wrapper">
+              <div class="avatar">
+                <img src="images/account-avatar.png" alt="Avatar" />
+              </div>
+              <div class="chevron"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">ID</div>
+            <div class="value copy-wrapper">
+              <span id="user-id">90440407</span>
+              <div class="copy-icon" id="copy-id"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Phone</div>
+            <div class="value">
+              <span class="value-link account-phone-value">70758137</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card 2 -->
+        <section class="card">
+          <div class="row">
+            <div class="label">Email</div>
+            <div class="value">
+              <span class="value-link account-email-value">ieudhehehe@mozej.com</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Registration Time</div>
+            <div class="value">
+              <span class="account-regtime-value">2025-11-29 16:44:43</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card 3 -->
+        <section class="card">
+          <div class="row">
+            <div class="label">Registration Method</div>
+            <div class="value">
+              <span class="account-regmethod-value">Phone</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast-message"></div>
+
+  <script>
+    // Load dynamic account data from localStorage (if available)
+    (function () {
+      function safeText(value, fallback) {
+        if (typeof value === "string" && value.trim() !== "") return value;
+        return fallback;
+      }
+
+      try {
+        var storedProfile = null;
+        var rawProfile = localStorage.getItem("userProfile");
+        if (rawProfile) {
+          try {
+            storedProfile = JSON.parse(rawProfile);
+          } catch (e) {
+            storedProfile = null;
+          }
+        }
+
+        var id = safeText(localStorage.getItem("accountId") || (storedProfile && storedProfile.id), document.getElementById("user-id").textContent);
+        var phone = safeText(localStorage.getItem("accountPhone") || (storedProfile && storedProfile.phone), document.querySelector(".account-phone-value").textContent);
+        var email = safeText(localStorage.getItem("accountEmail") || (storedProfile && storedProfile.email), document.querySelector(".account-email-value").textContent);
+        var regTime = safeText(localStorage.getItem("accountRegTime") || (storedProfile && storedProfile.regTime), document.querySelector(".account-regtime-value").textContent);
+        var regMethod = safeText(localStorage.getItem("accountRegMethod") || (storedProfile && storedProfile.regMethod), document.querySelector(".account-regmethod-value").textContent);
+
+        var idEl = document.getElementById("user-id");
+        var phoneEls = document.querySelectorAll(".account-phone-value");
+        var emailEls = document.querySelectorAll(".account-email-value");
+        var regTimeEls = document.querySelectorAll(".account-regtime-value");
+        var regMethodEls = document.querySelectorAll(".account-regmethod-value");
+
+        if (idEl) idEl.textContent = id;
+        phoneEls.forEach(function (el) { el.textContent = phone; });
+        emailEls.forEach(function (el) { el.textContent = email; });
+        regTimeEls.forEach(function (el) { el.textContent = regTime; });
+        regMethodEls.forEach(function (el) { el.textContent = regMethod; });
+      } catch (err) {
+        // fail silently, show default placeholders
+      }
+    })();
+
+    // Copy ID with toast
+    (function () {
+      var copyBtn = document.getElementById('copy-id');
+      var idSpan = document.getElementById('user-id');
+      var toastEl = document.getElementById('toast');
+
+      function showToast(message) {
+        if (!toastEl) return;
+        toastEl.textContent = message;
+        toastEl.classList.add('toast-visible');
+        window.clearTimeout(showToast._timer);
+        showToast._timer = window.setTimeout(function () {
+          toastEl.classList.remove('toast-visible');
+        }, 1600);
+      }
+
+      if (copyBtn && idSpan && navigator.clipboard) {
+        copyBtn.addEventListener('click', function () {
+          var text = idSpan.textContent || '';
+          navigator.clipboard.writeText(text).then(function () {
+            showToast('ID copied');
+          }).catch(function () {
+            showToast('Unable to copy ID');
+          });
+        });
+      } else if (copyBtn && idSpan) {
+        copyBtn.addEventListener('click', function () {
+          var range = document.createRange();
+          range.selectNodeContents(idSpan);
+          var selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          try {
+            var ok = document.execCommand('copy');
+            showToast(ok ? 'ID copied' : 'Unable to copy ID');
+          } catch (e) {
+            showToast('Unable to copy ID');
+          }
+          selection.removeAllRanges();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Room task</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+    :root {
+      --bg-main: #05060b;
+      --bg-card: #111827;
+      --bg-card-soft: #151b26;
+      --bg-chip: #1b2232;
+      --bg-stat: #06172b;
+      --text-primary: #ffffff;
+      --text-secondary: #7b8194;
+      --accent: #18c1ff;
+      --accent-2: #22e1a5;
+      --border-subtle: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .content {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background-color: var(--bg-card);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .hero-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .stats-card {
+      background-color: var(--bg-card);
+      border-radius: 18px;
+      padding: 14px 16px 16px;
+    }
+
+    .stats-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .stats-block {
+      flex: 1;
+    }
+
+    .stats-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .stats-value {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .stats-right {
+      text-align: right;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .outline-btn {
+      flex: 1;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid #2b5a8c;
+      background-color: transparent;
+      color: var(--accent);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+      padding: 0 2px;
+    }
+
+    .section-title {
+      font-size: 14px;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: var(--bg-chip);
+      font-size: 11px;
+      color: var(--text-primary);
+    }
+
+    .task-card {
+      background-color: var(--bg-card);
+      border-radius: 18px;
+      padding: 10px 10px 14px;
+      margin-top: 8px;
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .task-title {
+      font-size: 13px;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background-color: var(--bg-chip);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .status-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid #555f73;
+      display: inline-block;
+    }
+
+    .task-image {
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .task-image img {
+      width: 100%;
+      display: block;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 4px;
+      column-gap: 10px;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+    }
+
+    .info-value {
+      color: var(--text-primary);
+    }
+
+    .info-link {
+      color: var(--accent);
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .info-help {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid var(--text-secondary);
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+    }
+
+    .cta-btn {
+      width: 100%;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+      color: #05060b;
+      font-size: 15px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="top-bar">
+<div class="back-btn">
+<img alt="Back" src="images/back-icon-D2ne3Npi.png"/>
+</div>
+<div class="title">Room task</div>
+</header>
+<main class="content">
+<!-- Hero image -->
+<section class="hero-card">
+<img alt="Room banner" src="images/f3d03a2111a5141ca5f32e8d832eed9a.png"/>
+</section>
+<!-- Stats card -->
+<section class="stats-card">
+<div class="stats-row-top">
+<div class="stats-block">
+<div class="stats-label">Total investment</div>
+<div class="stats-value">0 USDT</div>
+</div>
+<div class="stats-block stats-right">
+<div class="stats-label">To be issued</div>
+<div class="stats-value">0 USDT</div>
+</div>
+</div>
+<div class="stats-row-top" style="margin-top:6px;">
+<div class="stats-block">
+<div class="stats-label">Total revenue</div>
+<div class="stats-value">0 USDT</div>
+</div>
+</div>
+<div class="btn-row">
+<button class="outline-btn" type="button">Investment record</button>
+<button class="outline-btn" type="button">Income record</button>
+</div>
+</section>
+<!-- Section header -->
+<section class="section-header">
+<div class="section-title">Room task</div>
+<div class="chip">Investment application record</div>
+</section>
+<!-- Task card -->
+<section class="task-card">
+<div class="task-top">
+<div class="task-title">15-day trial investment</div>
+<div class="status-chip">
+<span class="status-dot"></span>
+<span>Unsteady</span>
+</div>
+</div>
+<div class="task-image">
+<img alt="Room task" src="images/93eb07d819eea287a63e8a72b48b249d.png"/>
+</div>
+<div class="info-grid">
+<div>
+<div class="info-label">Cycle</div>
+<div class="info-value info-link">15Days</div>
+</div>
+<div>
+<div class="info-label">Daily yield</div>
+<div class="info-value info-link">2%</div>
+</div>
+<div>
+<div class="info-label">Level</div>
+<div class="info-value">All levels</div>
+</div>
+<div>
+<div class="info-label">Scope of investment</div>
+<div class="info-value">100 – 2000 USDT</div>
+</div>
+<div>
+<div class="info-row">
+<span class="info-label">Invested</span>
+<span class="info-help">?</span>
+</div>
+<div class="info-value">0 USDT</div>
+</div>
+<div>
+<div class="info-row">
+<span class="info-label">Maturity income</span>
+<span class="info-help">?</span>
+</div>
+<div class="info-value">0 USDT</div>
+</div>
+</div>
+<button class="cta-btn" type="button">Application</button>
+</section>
+</main>
+</div>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

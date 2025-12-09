@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Security Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    :root {
+      --page-bg: #0C0B10;
+      --card-bg: #17202D;
+      --card-inner-bg: #050812;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.45);
+      --border-subtle: #233246;
+      --input-bg: #050812;
+      --input-border: #233246;
+      --btn-bg: linear-gradient(90deg, #0B2F3B 0%, #101B20 100%);
+      --btn-disabled-bg: rgba(255, 255, 255, 0.06);
+      --accent: #00d1ff;
+      --danger: #ff5c5c;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--page-bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--page-bg);
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background: #000000;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      margin-right: 8px;
+      background: rgba(11, 12, 16, 0.95);
+    }
+
+    .back-arrow {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      transform: rotate(45deg);
+    }
+
+    .app-header-title {
+      flex: 1;
+      text-align: center;
+      margin-right: 40px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .app-main {
+      padding: 16px 12px 24px;
+    }
+
+    .security-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .security-item {
+      background-color: var(--card-bg);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .security-item.is-disabled {
+      opacity: 0.5;
+    }
+
+    .security-item.is-clickable {
+      cursor: pointer;
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background-color: var(--card-inner-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-box img {
+      width: 18px;
+      height: 18px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .label-text {
+      font-size: 14px;
+    }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .chevron {
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid var(--text-secondary);
+      border-bottom: 1px solid var(--text-secondary);
+      transform: rotate(-45deg);
+      margin-top: 1px;
+    }
+
+    /* Modal base */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 0 18px;
+    }
+
+    .modal-backdrop.is-visible {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 420px;
+      background-color: #070a12;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.85);
+      padding: 14px 16px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .modal-close {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background-color: transparent;
+    }
+
+    .modal-body {
+      margin-top: 4px;
+    }
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .field-extra {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .field-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-input {
+      flex: 1;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background-color: var(--input-bg);
+      padding: 0 10px;
+      font-size: 13px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .field-input[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .field-input::placeholder {
+      color: rgba(255,255,255,0.28);
+    }
+
+    .send-btn {
+      flex-shrink: 0;
+      padding: 0 10px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--input-border);
+      background-color: rgba(255,255,255,0.04);
+      color: var(--text-primary);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .send-btn[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-text {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--danger);
+      min-height: 14px;
+    }
+
+    .modal-footer {
+      margin-top: 8px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      height: 38px;
+      border-radius: 999px;
+      border: none;
+      font-size: 14px;
+      color: #ffffff;
+      background-image: var(--btn-bg);
+      cursor: pointer;
+    }
+
+    .primary-btn[disabled] {
+      background-image: none;
+      background-color: var(--btn-disabled-bg);
+      color: rgba(255,255,255,0.4);
+      cursor: not-allowed;
+    }
+
+    .hint-text {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .toast-message {
+      position: fixed;
+      left: 50%;
+      top: 110px;
+      transform: translate(-50%, -10px);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.82);
+      color: #ffffff;
+      font-size: 12px;
+      line-height: 1.4;
+      max-width: 80%;
+      text-align: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .toast-message.toast-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+        overflow: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <a href="javascript:history.back()" class="back-btn">
+        <div class="back-arrow"></div>
+      </a>
+      <div class="app-header-title">Security Center</div>
+    </header>
+
+    <main class="app-main">
+      <section class="security-list">
+        <div class="security-item is-disabled">
+          <div class="item-left">
+            <div class="icon-box">
+              <img src="images/Phone.png" alt="Phone" />
+            </div>
+            <div class="label-text">Phone</div>
+          </div>
+          <div class="item-right">
+            <span>Set</span>
+            <div class="chevron"></div>
+          </div>
+        </div>
+
+        <div class="security-item is-clickable" data-security="fund-password">
+          <div class="item-left">
+            <div class="icon-box">
+              <img src="images/Fund Password.png" alt="Fund Password" />
+            </div>
+            <div class="label-text">Fund Password</div>
+          </div>
+          <div class="item-right">
+            <span>Set</span>
+            <div class="chevron"></div>
+          </div>
+        </div>
+
+        <div class="security-item is-clickable" data-security="login-password">
+          <div class="item-left">
+            <div class="icon-box">
+              <img src="images/Login Password.png" alt="Login Password" />
+            </div>
+            <div class="label-text">Login Password</div>
+          </div>
+          <div class="item-right">
+            <span>Set</span>
+            <div class="chevron"></div>
+          </div>
+        </div>
+
+        <div class="security-item is-clickable" data-security="email">
+          <div class="item-left">
+            <div class="icon-box">
+              <img src="images/Email.png" alt="Email" />
+            </div>
+            <div class="label-text">Email</div>
+          </div>
+          <div class="item-right">
+            <span>Set</span>
+            <div class="chevron"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast-message"></div>
+
+  <!-- Login password modal -->
+  <div class="modal-backdrop" id="modal-login-password">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Set Login Password</div>
+        <button class="modal-close" type="button" data-close="login-password">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="hint-text">New password must be at least 8 characters.</div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">New password</span>
+          </div>
+          <input id="lp-new" class="field-input" type="password" maxlength="32" placeholder="Enter new password" autocomplete="new-password" />
+          <div id="lp-new-error" class="error-text"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">Confirm new password</span>
+          </div>
+          <input id="lp-confirm" class="field-input" type="password" maxlength="32" placeholder="Confirm new password" autocomplete="new-password" disabled />
+          <div id="lp-confirm-error" class="error-text"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">Current login password</span>
+          </div>
+          <input id="lp-current" class="field-input" type="password" maxlength="32" placeholder="Enter current login password" autocomplete="current-password" />
+          <div id="lp-current-error" class="error-text"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="lp-submit" class="primary-btn" type="button" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fund password modal -->
+  <div class="modal-backdrop" id="modal-fund-password">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Set Fund Password</div>
+        <button class="modal-close" type="button" data-close="fund-password">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="hint-text">Fund password must be exactly 6 digits.</div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">Fund password</span>
+          </div>
+          <input id="fp-new" class="field-input" type="password" inputmode="numeric" pattern="\d*" maxlength="6" placeholder="Enter 6-digit password" />
+          <div id="fp-new-error" class="error-text"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">Confirm fund password</span>
+          </div>
+          <input id="fp-confirm" class="field-input" type="password" inputmode="numeric" pattern="\d*" maxlength="6" placeholder="Confirm 6-digit password" disabled />
+          <div id="fp-confirm-error" class="error-text"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <span class="field-label">Login password</span>
+          </div>
+          <input id="fp-login" class="field-input" type="password" maxlength="32" placeholder="Enter login password" />
+          <div id="fp-login-error" class="error-text"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="fp-submit" class="primary-btn" type="button" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email modal -->
+  <div class="modal-backdrop" id="modal-email">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="email-modal-title">Set Email</div>
+        <button class="modal-close" type="button" data-close="email">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- New email state -->
+        <div id="email-state-new">
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Email</span>
+            </div>
+            <div class="field-input-row">
+              <input id="em-email" class="field-input" type="email" placeholder="Enter email" />
+              <button id="em-send" class="send-btn" type="button">Send</button>
+            </div>
+            <div id="em-email-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Verification code</span>
+            </div>
+            <input id="em-code" class="field-input" type="text" maxlength="6" placeholder="Enter code" />
+            <div id="em-code-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Login password</span>
+            </div>
+            <input id="em-password" class="field-input" type="password" maxlength="32" placeholder="Enter login password" />
+            <div id="em-password-error" class="error-text"></div>
+          </div>
+        </div>
+
+        <!-- Change email state -->
+        <div id="email-state-change" style="display:none;">
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Current email</span>
+            </div>
+            <div class="field-input-row">
+              <input id="em-old-email" class="field-input" type="email" readonly />
+              <button id="em-old-send" class="send-btn" type="button">Send</button>
+            </div>
+            <div id="em-old-email-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Code to current email</span>
+            </div>
+            <input id="em-old-code" class="field-input" type="text" maxlength="6" placeholder="Enter code" />
+            <div id="em-old-code-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">New email</span>
+            </div>
+            <div class="field-input-row">
+              <input id="em-new-email" class="field-input" type="email" placeholder="Enter new email" />
+              <button id="em-new-send" class="send-btn" type="button">Send</button>
+            </div>
+            <div id="em-new-email-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Code to new email</span>
+            </div>
+            <input id="em-new-code" class="field-input" type="text" maxlength="6" placeholder="Enter code" />
+            <div id="em-new-code-error" class="error-text"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <span class="field-label">Login password</span>
+            </div>
+            <input id="em-change-password" class="field-input" type="password" maxlength="32" placeholder="Enter login password" />
+            <div id="em-change-password-error" class="error-text"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="em-submit" class="primary-btn" type="button" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var toastEl = document.getElementById('toast');
+      function showToast(message) {
+        if (!toastEl) return;
+        toastEl.textContent = message;
+        toastEl.classList.add('toast-visible');
+        window.clearTimeout(showToast._timer);
+        showToast._timer = window.setTimeout(function () {
+          toastEl.classList.remove('toast-visible');
+        }, 2000);
+      }
+
+      function openModal(key) {
+        var id = 'modal-' + key;
+        var el = document.getElementById(id);
+        if (el) {
+          el.classList.add('is-visible');
+        }
+        if (key === 'email') {
+          setupEmailState();
+        }
+      }
+
+      function closeModal(key) {
+        var id = 'modal-' + key;
+        var el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('is-visible');
+        }
+      }
+
+      document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+        backdrop.addEventListener('click', function (e) {
+          if (e.target === backdrop) {
+            backdrop.classList.remove('is-visible');
+          }
+        });
+      });
+
+      document.querySelectorAll('.modal-close').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-close');
+          if (key) closeModal(key);
+        });
+      });
+
+      document.querySelectorAll('.security-item.is-clickable').forEach(function (item) {
+        item.addEventListener('click', function () {
+          var key = item.getAttribute('data-security');
+          if (!key) return;
+          openModal(key);
+        });
+      });
+
+      // LOGIN PASSWORD LOGIC
+      var lpNew = document.getElementById('lp-new');
+      var lpConfirm = document.getElementById('lp-confirm');
+      var lpCurrent = document.getElementById('lp-current');
+      var lpSubmit = document.getElementById('lp-submit');
+
+      function validateLoginPassword() {
+        var newVal = lpNew.value || '';
+        var confirmVal = lpConfirm.value || '';
+        var currentVal = lpCurrent.value || '';
+
+        var newError = '';
+        var confirmError = '';
+        var currentError = '';
+
+        if (newVal.length && newVal.length < 8) {
+          newError = 'Password must be at least 8 characters.';
+        }
+        lpConfirm.disabled = newVal.length < 8;
+
+        if (!lpConfirm.disabled && confirmVal && confirmVal !== newVal) {
+          confirmError = 'Passwords do not match.';
+        }
+
+        if (currentVal && currentVal.length < 8) {
+          currentError = 'Current password must be at least 8 characters.';
+        }
+
+        document.getElementById('lp-new-error').textContent = newError;
+        document.getElementById('lp-confirm-error').textContent = confirmError;
+        document.getElementById('lp-current-error').textContent = currentError;
+
+        var canSubmit = newVal.length >= 8 &&
+          confirmVal === newVal &&
+          currentVal.length >= 8;
+
+        lpSubmit.disabled = !canSubmit;
+      }
+
+      if (lpNew && lpConfirm && lpCurrent) {
+        lpNew.addEventListener('input', validateLoginPassword);
+        lpConfirm.addEventListener('input', validateLoginPassword);
+        lpCurrent.addEventListener('input', validateLoginPassword);
+      }
+
+      if (lpSubmit) {
+        lpSubmit.addEventListener('click', function () {
+          if (lpSubmit.disabled) return;
+          showToast('Login password updated (demo).');
+          lpNew.value = '';
+          lpConfirm.value = '';
+          lpCurrent.value = '';
+          validateLoginPassword();
+          closeModal('login-password');
+        });
+      }
+
+      // FUND PASSWORD LOGIC
+      var fpNew = document.getElementById('fp-new');
+      var fpConfirm = document.getElementById('fp-confirm');
+      var fpLogin = document.getElementById('fp-login');
+      var fpSubmit = document.getElementById('fp-submit');
+
+      function isSixDigits(value) {
+        return /^\d{6}$/.test(value);
+      }
+
+      function validateFundPassword() {
+        var newVal = fpNew.value || '';
+        var confirmVal = fpConfirm.value || '';
+        var loginVal = fpLogin.value || '';
+
+        var newError = '';
+        var confirmError = '';
+        var loginError = '';
+
+        if (newVal.length && !isSixDigits(newVal)) {
+          newError = 'Fund password must be 6 digits.';
+        }
+        fpConfirm.disabled = !isSixDigits(newVal);
+
+        if (!fpConfirm.disabled && confirmVal && confirmVal !== newVal) {
+          confirmError = 'Passwords do not match.';
+        }
+
+        if (loginVal && loginVal.length < 8) {
+          loginError = 'Login password must be at least 8 characters.';
+        }
+
+        document.getElementById('fp-new-error').textContent = newError;
+        document.getElementById('fp-confirm-error').textContent = confirmError;
+        document.getElementById('fp-login-error').textContent = loginError;
+
+        var canSubmit = isSixDigits(newVal) &&
+          confirmVal === newVal &&
+          loginVal.length >= 8;
+
+        fpSubmit.disabled = !canSubmit;
+      }
+
+      if (fpNew && fpConfirm && fpLogin) {
+        fpNew.addEventListener('input', validateFundPassword);
+        fpConfirm.addEventListener('input', validateFundPassword);
+        fpLogin.addEventListener('input', validateFundPassword);
+      }
+
+      if (fpSubmit) {
+        fpSubmit.addEventListener('click', function () {
+          if (fpSubmit.disabled) return;
+          showToast('Fund password updated (demo).');
+          fpNew.value = '';
+          fpConfirm.value = '';
+          fpLogin.value = '';
+          validateFundPassword();
+          closeModal('fund-password');
+        });
+      }
+
+      // EMAIL LOGIC
+      var emailModalTitle = document.getElementById('email-modal-title');
+      var emailStateNew = document.getElementById('email-state-new');
+      var emailStateChange = document.getElementById('email-state-change');
+      var emEmail = document.getElementById('em-email');
+      var emSend = document.getElementById('em-send');
+      var emCode = document.getElementById('em-code');
+      var emPassword = document.getElementById('em-password');
+      var emSubmit = document.getElementById('em-submit');
+
+      var emOldEmail = document.getElementById('em-old-email');
+      var emOldSend = document.getElementById('em-old-send');
+      var emOldCode = document.getElementById('em-old-code');
+      var emNewEmail = document.getElementById('em-new-email');
+      var emNewSend = document.getElementById('em-new-send');
+      var emNewCode = document.getElementById('em-new-code');
+      var emChangePassword = document.getElementById('em-change-password');
+
+      var newEmailCode = '';
+      var oldEmailCode = '';
+      var changeNewEmailCode = '';
+
+      function validateEmailFormat(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function generateCode() {
+        return String(Math.floor(100000 + Math.random() * 900000));
+      }
+
+      function setupEmailState() {
+        var storedEmail = '';
+        try {
+          storedEmail = window.localStorage.getItem('userEmail') || '';
+        } catch (e) { storedEmail = ''; }
+
+        if (storedEmail) {
+          if (emailModalTitle) emailModalTitle.textContent = 'Change Email';
+          if (emailStateNew) emailStateNew.style.display = 'none';
+          if (emailStateChange) emailStateChange.style.display = 'block';
+          if (emOldEmail) emOldEmail.value = storedEmail;
+        } else {
+          if (emailModalTitle) emailModalTitle.textContent = 'Set Email';
+          if (emailStateNew) emailStateNew.style.display = 'block';
+          if (emailStateChange) emailStateChange.style.display = 'none';
+        }
+        resetEmailErrors();
+        updateEmailSubmitState();
+      }
+
+      function resetEmailErrors() {
+        var ids = [
+          'em-email-error','em-code-error','em-password-error',
+          'em-old-email-error','em-old-code-error',
+          'em-new-email-error','em-new-code-error',
+          'em-change-password-error'
+        ];
+        ids.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = '';
+        });
+      }
+
+      function updateEmailSubmitState() {
+        var storedEmail = '';
+        try {
+          storedEmail = window.localStorage.getItem('userEmail') || '';
+        } catch (e) { storedEmail = ''; }
+
+        var enabled = false;
+        if (!storedEmail) {
+          var emailVal = emEmail ? emEmail.value : '';
+          var codeVal = emCode ? emCode.value : '';
+          var passVal = emPassword ? emPassword.value : '';
+          enabled = validateEmailFormat(emailVal) &&
+            codeVal && codeVal === newEmailCode &&
+            passVal.length >= 8;
+        } else {
+          var oldCodeVal = emOldCode ? emOldCode.value : '';
+          var newEmailVal = emNewEmail ? emNewEmail.value : '';
+          var newCodeVal = emNewCode ? emNewCode.value : '';
+          var changePassVal = emChangePassword ? emChangePassword.value : '';
+          enabled = validateEmailFormat(newEmailVal) &&
+            oldCodeVal && oldCodeVal === oldEmailCode &&
+            newCodeVal && newCodeVal === changeNewEmailCode &&
+            changePassVal.length >= 8;
+        }
+        if (emSubmit) emSubmit.disabled = !enabled;
+      }
+
+      if (emSend) {
+        emSend.addEventListener('click', function () {
+          var emailVal = emEmail.value || '';
+          if (!validateEmailFormat(emailVal)) {
+            document.getElementById('em-email-error').textContent = 'Enter a valid email.';
+            return;
+          }
+          newEmailCode = generateCode();
+          showToast('Demo code: ' + newEmailCode);
+          document.getElementById('em-email-error').textContent = '';
+        });
+      }
+
+      if (emOldSend) {
+        emOldSend.addEventListener('click', function () {
+          var emailVal = emOldEmail.value || '';
+          if (!emailVal) return;
+          oldEmailCode = generateCode();
+          showToast('Demo code to old email: ' + oldEmailCode);
+        });
+      }
+
+      if (emNewSend) {
+        emNewSend.addEventListener('click', function () {
+          var emailVal = emNewEmail.value || '';
+          if (!validateEmailFormat(emailVal)) {
+            document.getElementById('em-new-email-error').textContent = 'Enter a valid email.';
+            return;
+          }
+          changeNewEmailCode = generateCode();
+          showToast('Demo code to new email: ' + changeNewEmailCode);
+          document.getElementById('em-new-email-error').textContent = '';
+        });
+      }
+
+      ['input','change'].forEach(function (evt) {
+        if (emEmail) emEmail.addEventListener(evt, updateEmailSubmitState);
+        if (emCode) emCode.addEventListener(evt, updateEmailSubmitState);
+        if (emPassword) emPassword.addEventListener(evt, updateEmailSubmitState);
+        if (emOldCode) emOldCode.addEventListener(evt, updateEmailSubmitState);
+        if (emNewEmail) emNewEmail.addEventListener(evt, updateEmailSubmitState);
+        if (emNewCode) emNewCode.addEventListener(evt, updateEmailSubmitState);
+        if (emChangePassword) emChangePassword.addEventListener(evt, updateEmailSubmitState);
+      });
+
+      if (emSubmit) {
+        emSubmit.addEventListener('click', function () {
+          if (emSubmit.disabled) return;
+          var storedEmail = '';
+          try {
+            storedEmail = window.localStorage.getItem('userEmail') || '';
+          } catch (e) { storedEmail = ''; }
+
+          if (!storedEmail) {
+            var emailVal = emEmail.value || '';
+            var codeVal = emCode.value || '';
+            var passVal = emPassword.value || '';
+
+            resetEmailErrors();
+            if (!validateEmailFormat(emailVal)) {
+              document.getElementById('em-email-error').textContent = 'Enter a valid email.';
+              return;
+            }
+            if (!codeVal || codeVal !== newEmailCode) {
+              document.getElementById('em-code-error').textContent = 'Incorrect code.';
+              return;
+            }
+            if (passVal.length < 8) {
+              document.getElementById('em-password-error').textContent = 'Password must be at least 8 characters.';
+              return;
+            }
+            try {
+              window.localStorage.setItem('userEmail', emailVal);
+            } catch (e) {}
+            showToast('Email set (demo).');
+          } else {
+            var oldCodeVal = emOldCode.value || '';
+            var newEmailVal = emNewEmail.value || '';
+            var newCodeVal = emNewCode.value || '';
+            var changePassVal = emChangePassword.value || '';
+
+            resetEmailErrors();
+            if (!oldCodeVal || oldCodeVal !== oldEmailCode) {
+              document.getElementById('em-old-code-error').textContent = 'Incorrect code.';
+              return;
+            }
+            if (!validateEmailFormat(newEmailVal)) {
+              document.getElementById('em-new-email-error').textContent = 'Enter a valid email.';
+              return;
+            }
+            if (!newCodeVal || newCodeVal !== changeNewEmailCode) {
+              document.getElementById('em-new-code-error').textContent = 'Incorrect code.';
+              return;
+            }
+            if (changePassVal.length < 8) {
+              document.getElementById('em-change-password-error').textContent = 'Password must be at least 8 characters.';
+              return;
+            }
+            try {
+              window.localStorage.setItem('userEmail', newEmailVal);
+            } catch (e) {}
+            showToast('Email updated (demo).');
+          }
+
+          if (emEmail) emEmail.value = '';
+          if (emCode) emCode.value = '';
+          if (emPassword) emPassword.value = '';
+          if (emOldCode) emOldCode.value = '';
+          if (emNewEmail) emNewEmail.value = '';
+          if (emNewCode) emNewCode.value = '';
+          if (emChangePassword) emChangePassword.value = '';
+          updateEmailSubmitState();
+          closeModal('email');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

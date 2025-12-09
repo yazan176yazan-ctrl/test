@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Theme</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+    :root {
+      --bg-main: #05060b;
+      --bg-page: #101827;
+      --bg-option: #05070e;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --accent: #22e1a5;
+      --border-subtle: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .page-body {
+      margin-top: 10px;
+      background-color: var(--bg-page);
+      border-radius: 18px;
+      padding: 14px 8px 24px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--bg-option);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .option-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid #fbbf24;
+      position: relative;
+    }
+
+    .icon-circle.day::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 30%, #fde68a 0, #fbbf24 40%, #f97316 80%);
+    }
+
+    .icon-circle.night {
+      border-color: #6b7280;
+    }
+
+    .icon-circle.night::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: inherit;
+      box-shadow: -4px 0 0 0 #e5e7eb;
+    }
+
+    .option-label {
+      font-size: 14px;
+    }
+
+    .radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-inner {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #020617;
+    }
+
+    .radio.unchecked {
+      border-color: #4b5563;
+    }
+
+    .radio.unchecked .radio-inner {
+      display: none;
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="top-bar">
+<div class="back-btn">
+<img alt="Back" src="images/back-icon-D2ne3Npi.png"/>
+</div>
+<div class="title">Theme</div>
+</header>
+<main class="page-body">
+<section class="option">
+<div class="option-left">
+<div class="icon-circle day"></div>
+<div class="option-label">Daytime mode</div>
+</div>
+<div class="radio unchecked">
+<div class="radio-inner">✓</div>
+</div>
+</section>
+<section class="option">
+<div class="option-left">
+<div class="icon-circle night"></div>
+<div class="option-label">Night mode</div>
+</div>
+<div class="radio">
+<div class="radio-inner">✓</div>
+</div>
+</section>
+</main>
+</div>
+<script src="common-nav.js"></script>
+</body>
+</html>

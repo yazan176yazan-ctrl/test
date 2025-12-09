@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>My Works</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+    :root {
+      --bg-main: #05060b;
+      --bg-strip: #05070f;
+      --bg-pill: #111827;
+      --bg-pill-active: #263246;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .tabs-strip {
+      margin-top: 12px;
+      background-color: #05070f;
+      border-radius: 18px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.3;
+      white-space: normal;
+    }
+
+    .tab.active {
+      background-color: #263246;
+      color: #e5f7ff;
+    }
+
+    .empty-state {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .empty-state img {
+      width: 150px;
+      height: auto;
+      opacity: 0.9;
+    }
+
+    .empty-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="top-bar">
+<div class="back-btn">
+<img alt="Back" src="images/back-icon-D2ne3Npi.png"/>
+</div>
+<div class="title">My Works</div>
+</header>
+<main>
+<section class="tabs-strip">
+<div class="tab active">AI Tool Creation<br/>Record</div>
+<div class="tab">AI Chat<br/>Conversation<br/>Record</div>
+<div class="tab">AI Drawing Record</div>
+</section>
+<section class="empty-state">
+<img alt="No Data" src="images/data-null-C37GHZMZ.png"/>
+<div class="empty-text">No More Data<br/>Available</div>
+</section>
+</main>
+</div>
+<script src="common-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Deposit</title>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #05070b;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      height: 44px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      width: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+
+    .back-icon {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      transform: rotate(45deg);
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .header-right {
+      width: 40px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .bill-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+
+    .bill-icon {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .main {
+      flex: 1;
+      padding: 10px 12px 24px;
+      overflow-y: auto;
+    }
+
+    .tip-banner a {
+      color: #00d1ff;
+      text-decoration: none;
+    }
+
+    .section-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 6px;
+      margin-top: 4px;
+    }
+
+    .currency-box {
+      height: 40px;
+      border-radius: 8px;
+      background-color: #101b20;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .currency-arrow {
+      width: 8px;
+      height: 8px;
+      border-left: 2px solid rgba(255, 255, 255, 0.7);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+      transform: rotate(-45deg);
+    }
+
+    .network-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .network-btn {
+      flex: 1;
+      height: 36px;
+      border-radius: 8px;
+      background-color: #101b20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid transparent;
+    }
+
+    .network-btn.active {
+      border-color: #00d1ff;
+      box-shadow: 0 0 0 1px rgba(0, 209, 255, 0.35);
+      color: #00d1ff;
+    }
+
+    .qr-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .qr-box {
+      width: 190px;
+      height: 190px;
+      padding: 10px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .qr-inner {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    .qr-caption {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+    }
+
+    .address-box {
+      height: 44px;
+      border-radius: 8px;
+      background-color: #182334;
+      padding: 0 10px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .address-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-right: 10px;
+    }
+
+    .copy-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .copy-btn img {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    .reminder-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .reminder-list {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.5;
+      padding-left: 16px;
+    }
+
+    .reminder-list li {
+      margin-bottom: 6px;
+    }
+
+    .highlight {
+      color: #00d1ff;
+    }
+  
+    .copy-top-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .currency-box {
+      cursor: pointer;
+    }
+
+    .currency-modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 50;
+    }
+
+    .currency-modal-mask.show {
+      display: block;
+    }
+
+    .currency-modal {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateY(100%);
+      background-color: #050811;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      padding: 12px 16px 20px;
+      z-index: 51;
+      transition: transform 0.2s ease-out;
+    }
+
+    .currency-modal.show {
+      transform: translateY(0);
+    }
+
+    .currency-modal-header {
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .currency-option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .currency-option {
+      height: 42px;
+      border-radius: 10px;
+      background-color: #172133;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .currency-option:active {
+      background-color: #1f2b40;
+    }
+
+    .currency-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .currency-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .currency-option {
+      justify-content: flex-start;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .currency-option-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: block;
+      margin-right: 8px;
+    }
+
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+<div class="header-left">
+<a aria-label="Back" class="back-btn" href="javascript:history.back();">
+<span class="back-icon"></span>
+</a>
+</div>
+<div class="header-title">Deposit</div>
+<div class="header-right">
+  <a href="bills.html" class="bill-link">
+    <img src="images/bills-icon.png" alt="Bills" class="bill-icon"/>
+  </a>
+</div>
+</div>
+<div class="main">
+<div class="section-label">Deposit Currency</div>
+<div class="currency-box">
+  <div class="currency-left">
+    <img src="images/usdt.png" alt="USDT" class="currency-icon"/>
+    <span class="currency-text">USDT</span>
+  </div>
+  <span class="currency-arrow"></span>
+</div>
+<div class="section-label">Deposit Network</div>
+<div class="network-row">
+<div class="network-btn active">BEP20</div>
+<div class="network-btn">TRC20</div>
+<div class="network-btn">ERC20</div>
+</div>
+<div class="qr-wrapper">
+<div class="qr-box">
+  <img src="images/deposit-qr.png" alt="Deposit QR Code" class="qr-inner"/>
+</div>
+<div class="qr-caption">
+          This address only supports deposits of BEP20 USDT
+        </div>
+</div>
+<div class="section-label">Deposit Address</div>
+<div class="address-box">
+<div class="address-text">0x4825ce87d200696a17c035d56bb295ec2519374e</div>
+<button class="copy-btn" type="button">
+<img alt="Copy" src="images/back-icon-D2ne3Npi.png"/>
+</button>
+</div>
+<div class="reminder-title">Friendly Reminder</div>
+<ol class="reminder-list">
+<li>Please do not recharge any USDT currency that is not a BEP20 network to the above address, otherwise the assets will not be retrieved.</li>
+<li>After you recharge to the above address, the entire network node needs to confirm, and the payment will be made after the network confirms.</li>
+<li>The minimum recharge amount is: <span class="highlight">0.1 USDT</span>. Recharge amounts less than the minimum amount will not be posted to the account and cannot be refunded.</li>
+<li>Each time you recharge, you need to go to the recharge page to check the latest address, which will be updated from time to time.</li>
+<li>Be sure to confirm the security of your computer and browser to prevent information from being tampered with or leaked.</li>
+<li>Please do not deposit NFT to this address.</li>
+<li>Recharge through smart contracts is not supported. Do not recharge USDT through ERC20, Arbitrum and Optimism networks.</li>
+</ol>
+</div>
+</div>
+
+<div class="currency-modal-mask" id="currencyMask"></div>
+<div class="currency-modal" id="currencyModal">
+  <div class="currency-modal-header">Select Currency</div>
+  <div class="currency-option-list">
+    <button class="currency-option" type="button" data-code="USDT">
+      <img src="images/usdt.png" alt="USDT" class="currency-option-icon"/>
+      <span>USDT</span>
+    </button>
+    <button class="currency-option" type="button" data-code="USDC">
+      <img src="images/usdc.png" alt="USDC" class="currency-option-icon"/>
+      <span>USDC</span>
+    </button>
+  </div>
+</div>
+
+
+<script>
+  (function() {
+    var networkConfigs = {
+      "BEP20": {
+        address: "0x4825ce87d200696a17c035d56bb295ec2519374e"
+      },
+      "TRC20": {
+        address: "TQx7w9jP3hF2A1b9mK4v2c7dYW8Q9tLmQ"
+      },
+      "ERC20": {
+        address: "0x91f5e1c4f7a8b0e4c3d29f4a7b2e8d6c1122aa01"
+      }
+    };
+
+    var currencyConfigs = {
+      "USDT": { icon: "images/usdt.png" },
+      "USDC": { icon: "images/usdc.png" }
+    };
+
+    var currentCurrency = "USDT";
+
+    var networkButtons = document.querySelectorAll(".network-btn");
+    var addressTextEl = document.querySelector(".address-text");
+    var qrCaptionEl = document.querySelector(".qr-caption");
+    var currencyBox = document.querySelector(".currency-box");
+    var currencyTextEl = document.querySelector(".currency-text");
+    var currencyIconEl = document.querySelector(".currency-icon");
+    var mask = document.getElementById("currencyMask");
+    var modal = document.getElementById("currencyModal");
+    var currencyOptions = modal ? modal.querySelectorAll(".currency-option") : [];
+
+    function updateAddress(network) {
+      var config = networkConfigs[network];
+      if (!config || !addressTextEl || !qrCaptionEl) return;
+      addressTextEl.textContent = config.address;
+      qrCaptionEl.textContent =
+        "This address only supports deposits of " + network + " " + currentCurrency;
+    }
+
+    networkButtons.forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        networkButtons.forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        var network = (btn.textContent || "").trim();
+        updateAddress(network);
+      });
+    });
+
+    function openCurrencyModal() {
+      if (!mask || !modal) return;
+      mask.classList.add("show");
+      modal.classList.add("show");
+    }
+
+    function closeCurrencyModal() {
+      if (!mask || !modal) return;
+      mask.classList.remove("show");
+      modal.classList.remove("show");
+    }
+
+    if (currencyBox) {
+      currencyBox.addEventListener("click", openCurrencyModal);
+    }
+
+    if (mask) {
+      mask.addEventListener("click", closeCurrencyModal);
+    }
+
+    currencyOptions.forEach(function(opt) {
+      opt.addEventListener("click", function() {
+        var code = opt.getAttribute("data-code") || "USDT";
+        currentCurrency = code;
+        if (currencyTextEl) {
+          currencyTextEl.textContent = code;
+        }
+        if (currencyIconEl && currencyConfigs[code]) {
+          currencyIconEl.src = currencyConfigs[code].icon;
+        }
+        closeCurrencyModal();
+        var activeBtn = document.querySelector(".network-btn.active");
+        if (activeBtn) {
+          var activeNetwork = (activeBtn.textContent || "").trim();
+          updateAddress(activeNetwork);
+        }
+      });
+    });
+
+    updateAddress("BEP20");
+  })();
+</script>
+
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

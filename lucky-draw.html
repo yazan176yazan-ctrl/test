@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Lucky draw</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+    :root {
+      --bg-main: #05060b;
+      --bg-panel: #021020;
+      --bg-card: #01509b;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca1b2;
+      --accent: #18c1ff;
+      --accent-2: #22e1a5;
+      --accent-soft: #11bcd2;
+      --border-subtle: #1b2232;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .content {
+      margin-top: 10px;
+    }
+
+    .tag-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .tag-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background-color: #15d4d8;
+      font-size: 12px;
+      color: #020712;
+      white-space: nowrap;
+    }
+
+    .tag-pill.secondary {
+      align-self: flex-end;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+      margin-top: 6px;
+    }
+
+    .prize-card {
+      background: radial-gradient(circle at 30% 10%, #23e2ff 0%, #01509b 55%, #012040 100%);
+      border-radius: 14px;
+      padding: 8px 6px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.5);
+    }
+
+    .prize-card img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      margin-bottom: 6px;
+    }
+
+    .prize-label {
+      font-size: 11px;
+    }
+
+    .start-text {
+      text-align: center;
+      margin: 18px 0 22px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #555a68;
+    }
+
+    .remaining {
+      text-align: center;
+      font-size: 13px;
+      margin-bottom: 18px;
+      color: var(--text-secondary);
+    }
+
+    .remaining span {
+      color: #1de0a2;
+      margin: 0 2px;
+    }
+
+    .rules-title {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .rules-card {
+      background-color: #111827;
+      border-radius: 14px;
+      padding: 14px 12px 16px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .rules-card p + p {
+      margin-top: 8px;
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="top-bar">
+<div class="back-btn">
+<img alt="Back" src="images/back-icon-D2ne3Npi.png"/>
+</div>
+<div class="title">Lucky draw</div>
+</header>
+<main class="content">
+<section class="tag-row">
+<div class="tag-column">
+<div class="tag-pill">Activity rules</div>
+<div class="tag-pill">Lottery number record</div>
+</div>
+<div class="tag-pill secondary">My prize</div>
+</section>
+<section class="grid">
+<div class="prize-card">
+<img alt="95 USDT" src="images/b47dd2e41f360c16613470c80a09e689.png"/>
+<div class="prize-label">95 USDT</div>
+</div>
+<div class="prize-card">
+<img alt="5 USDT" src="images/98ded52b9f0b901b516b86e5159bb887.png"/>
+<div class="prize-label">5 USDT</div>
+</div>
+<div class="prize-card">
+<img alt="iPhone 17" src="images/a973a083c60a443bbfe0e16facd3612f.png"/>
+<div class="prize-label">iPhone 17</div>
+</div>
+<div class="prize-card">
+<img alt="9 USDT" src="images/98ded52b9f0b901b516b86e5159bb887.png"/>
+<div class="prize-label">9 USDT</div>
+</div>
+<div class="prize-card">
+<img alt="Audi A6" src="images/90c8491c6b7b33d9291d509492a938a6.png"/>
+<div class="prize-label">Audi A6</div>
+</div>
+<div class="prize-card">
+<img alt="15 USDT" src="images/98ded52b9f0b901b516b86e5159bb887.png"/>
+<div class="prize-label">15 USDT</div>
+</div>
+<div class="prize-card">
+<img alt="iPad" src="images/a973a083c60a443bbfe0e16facd3612f.png"/>
+<div class="prize-label">iPad</div>
+</div>
+<div class="prize-card">
+<img alt="25 USDT" src="images/98ded52b9f0b901b516b86e5159bb887.png"/>
+<div class="prize-label">25 USDT</div>
+</div>
+<div class="prize-card">
+<img alt="55 USDT" src="images/b47dd2e41f360c16613470c80a09e689.png"/>
+<div class="prize-label">55 USDT</div>
+</div>
+</section>
+<div class="start-text">Start</div>
+<div class="remaining">
+        Remaining <span>0 times</span> lottery opportunities
+      </div>
+<div class="rules-title">Participation rules and conditions</div>
+<div class="rules-card">
+<p>1. During the event, when subordinates meet the recharge criteria, superiors will automatically receive the qualification for the lucky draw.</p>
+<p>2. The lucky draw opportunity is valid on the day and cannot be accumulated to the next day. Please use it promptly, as it will be reset after expiration.</p>
+<p>3. If you win a physical prize, please take a screenshot and contact the product manager with your account to claim it.</p>
+<p>4. The lucky draw is open for a limited time, with more luxurious prizes coming soon. Stay tuned!</p>
+<p>5. The final interpretation of this event belongs to EXARAI official.</p>
+</div>
+</main>
+</div>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

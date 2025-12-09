@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Site message</title>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #05070b;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      height: 100vh;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      height: 44px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      flex-shrink: 0;
+    }
+
+    .header-side {
+      width: 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-right {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      justify-content: flex-end;
+      width: 60px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 24px;
+      height: 24px;
+    }
+
+    .back-icon {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      transform: rotate(45deg);
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 80px;
+    }
+
+    .icon-wrapper {
+      width: 120px;
+      height: 120px;
+      border-radius: 60px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .icon-wrapper img {
+      width: 72px;
+      height: 72px;
+      display: block;
+    }
+
+    .message-text {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+<div class="header-side">
+<a aria-label="Back" class="back-btn" href="javascript:history.back();">
+<span class="back-icon"></span>
+</a>
+</div>
+<div class="header-title">Site message</div>
+<div class="header-right">All read</div>
+</div>
+<div class="content">
+<div class="icon-wrapper">
+<img alt="Empty" src="images/notice-2-on-DPdBOjno.png"/>
+</div>
+<div class="message-text">
+        No More Data<br/>Available
+      </div>
+</div>
+</div>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

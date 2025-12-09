@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Bills</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+    :root {
+      --bg-main: #05060b;
+      --bg-card: #11141f;
+      --bg-input: #151824;
+      --border-subtle: #262a3a;
+      --text-primary: #ffffff;
+      --text-secondary: #7b8194;
+      --accent: #18c1ff;
+      --accent-2: #22e1a5;
+      --btn-disabled: #424654;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 10px;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .record-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background-color: #151824;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .record-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .content {
+      margin-top: 10px;
+    }
+
+    .time-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .time-input {
+      flex: 1;
+      height: 44px;
+      border-radius: 10px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .time-separator {
+      font-size: 12px;
+      color: var(--text-secondary);
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .select-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 4px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .select-row + .select-row {
+      border-top: 1px solid #11141f;
+    }
+
+    .select-label-main {
+      font-size: 14px;
+    }
+
+    .select-arrow {
+      width: 10px;
+      height: 10px;
+      border-right: 1px solid var(--text-secondary);
+      border-bottom: 1px solid var(--text-secondary);
+      transform: rotate(45deg);
+      margin-right: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #151824;
+      margin: 6px 0 18px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      height: 44px;
+      border-radius: 999px;
+      font-size: 15px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-reset {
+      background-color: #2f333f;
+      color: #9a9fb0;
+    }
+
+    .btn-confirm {
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+      color: #05060b;
+      font-weight: 500;
+    }
+
+
+    .empty-state {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .bill-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bill-item {
+      background-color: #0c0f18;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid #171924;
+    }
+
+    .bill-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .bill-type {
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .bill-amount {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent-2);
+    }
+
+    .bill-sub-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .bill-status {
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .bill-time {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bill-fee,
+    .bill-net {
+      font-size: 11px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0 10px;
+      background-color: #080a12;
+      border-radius: 999px;
+      padding: 2px;
+      border: 1px solid #151824;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      padding: 7px 0;
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text-secondary);
+    }
+
+    .tab.active {
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+      color: #05060b;
+      font-weight: 500;
+    }
+
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="top-bar">
+<div class="back-btn">
+<img alt="Back" src="images/back-icon-D2ne3Npi.png"/>
+</div>
+<div class="title">Bills</div>
+<div class="record-btn">
+<img alt="Record" src="images/record.png"/>
+</div>
+</header>
+
+<main class="content">
+<section class="time-range">
+<input class="time-input" id="startDate" type="date"/>
+<div class="time-separator">To</div>
+<input class="time-input" id="endDate" type="date"/>
+</section>
+<section>
+<div class="select-row" id="typeRow">
+<div class="select-label-main" id="typeLabel">All</div>
+<div class="select-arrow"></div>
+</div>
+<div class="select-row" id="currencyRow">
+<div class="select-label-main" id="currencyLabel">USDT</div>
+<div class="select-arrow"></div>
+</div>
+</section>
+
+<div class="divider"></div>
+<section class="btn-row">
+<button class="btn btn-reset" type="button">Reset</button>
+<button class="btn btn-confirm" type="button">Confirm</button>
+</section>
+<div id="billsContainer" class="empty-state">
+        No bills yet.
+      </div>
+</main>
+</div>
+<script src="auth.js"></script>
+<script>
+  (function() {
+    var container = document.getElementById('billsContainer');
+    var startInput = document.getElementById('startDate');
+    var endInput = document.getElementById('endDate');
+    var resetBtn = document.querySelector('.btn-reset');
+    var confirmBtn = document.querySelector('.btn-confirm');
+    var typeRow = document.getElementById('typeRow');
+    var typeLabel = document.getElementById('typeLabel');
+    var currencyRow = document.getElementById('currencyRow');
+    var currencyLabel = document.getElementById('currencyLabel');
+    var backBtn = document.querySelector('.back-btn');
+
+    if (!container) return;
+
+    if (backBtn) {
+      backBtn.addEventListener('click', function () {
+        if (window.history.length > 1) {
+          window.history.back();
+        }
+      });
+    }
+
+    var allTxs = [];
+    var filters = {
+      startDate: '',
+      endDate: '',
+      type: 'all',
+      currency: 'USDT'
+    };
+
+    function showEmpty() {
+      container.className = 'empty-state';
+      container.textContent = 'No bills yet.';
+    }
+
+    function renderBills(list) {
+      if (!list || !list.length) {
+        showEmpty();
+        return;
+      }
+
+      container.className = 'bill-list';
+      container.innerHTML = '';
+
+      list.forEach(function(tx) {
+        var item = document.createElement('div');
+        item.className = 'bill-item';
+
+        var typeLabelText = tx.type === 'withdraw' ? 'Withdraw' :
+                            tx.type === 'deposit' ? 'Deposit' :
+                            tx.type === 'income' ? 'Income' :
+                            tx.type === 'swap' ? 'Swap' :
+                            (tx.type || 'Record');
+
+        var status = tx.status || 'PENDING';
+        var createdAt = tx.createdAt ? tx.createdAt.replace('T', ' ').slice(0, 19) : '';
+
+        var amount = (typeof tx.amount === 'number'
+          ? tx.amount.toFixed(2)
+          : String(tx.amount || '0'));
+        var currency = (tx.currency || filters.currency || 'USDT').toUpperCase();
+        var amountStr = amount + ' ' + currency;
+
+        var feeStr = typeof tx.fee === 'number' ? tx.fee.toFixed(2) + ' ' + currency : '';
+        var netStr = typeof tx.net === 'number' ? tx.net.toFixed(2) + ' ' + currency : '';
+
+        item.innerHTML =
+          '<div class="bill-main-row">' +
+            '<span class="bill-type">' + typeLabelText + '</span>' +
+            '<span class="bill-amount">' + amountStr + '</span>' +
+          '</div>' +
+          '<div class="bill-sub-row">' +
+            '<span class="bill-status">' + status + '</span>' +
+            (createdAt ? '<span class="bill-time">' + createdAt + '</span>' : '') +
+          '</div>' +
+          (feeStr || netStr
+            ? '<div class="bill-sub-row">' +
+                (feeStr ? '<span class="bill-fee">Fee: ' + feeStr + '</span>' : '') +
+                (netStr ? '<span class="bill-net">Net: ' + netStr + '</span>' : '') +
+              '</div>'
+            : '');
+
+        container.appendChild(item);
+      });
+    }
+
+    function applyFilters() {
+      if (!allTxs.length) {
+        showEmpty();
+        return;
+      }
+
+      var filtered = allTxs.filter(function(tx) {
+        var createdAt = tx.createdAt ? new Date(tx.createdAt) : null;
+
+        if (filters.startDate && createdAt) {
+          var start = new Date(filters.startDate + 'T00:00:00');
+          if (createdAt < start) return false;
+        }
+        if (filters.endDate && createdAt) {
+          var end = new Date(filters.endDate + 'T23:59:59');
+          if (createdAt > end) return false;
+        }
+
+        if (filters.type && filters.type !== 'all') {
+          if (!tx.type || tx.type.toLowerCase() !== filters.type) return false;
+        }
+
+        if (filters.currency) {
+          var txCurrency = (tx.currency || 'USDT').toUpperCase();
+          if (txCurrency !== filters.currency.toUpperCase()) return false;
+        }
+
+        return true;
+      });
+
+      renderBills(filtered);
+    }
+
+    function loadTransactions() {
+      if (!window.ExaAuth || !ExaAuth.getCurrentUser) {
+        showEmpty();
+        return;
+      }
+
+      var user = ExaAuth.getCurrentUser();
+      if (!user || !user.uid) {
+        showEmpty();
+        return;
+      }
+
+      var txs = ExaAuth.getUserTransactions
+        ? ExaAuth.getUserTransactions(user.uid)
+        : [];
+
+      if (!txs || !txs.length) {
+        showEmpty();
+        return;
+      }
+
+      allTxs = txs.slice().sort(function(a, b) {
+        if (!a.createdAt || !b.createdAt) return 0;
+        return a.createdAt < b.createdAt ? 1 : -1;
+      });
+
+      applyFilters();
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (startInput) startInput.value = '';
+        if (endInput) endInput.value = '';
+        filters.startDate = '';
+        filters.endDate = '';
+        filters.type = 'all';
+        filters.currency = 'USDT';
+        if (typeLabel) typeLabel.textContent = 'All';
+        if (currencyLabel) currencyLabel.textContent = 'USDT';
+        applyFilters();
+      });
+    }
+
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function() {
+        if (startInput) filters.startDate = startInput.value || '';
+        if (endInput) filters.endDate = endInput.value || '';
+        applyFilters();
+      });
+    }
+
+    if (typeRow) {
+      var typeOptions = ['all', 'deposit', 'withdraw', 'swap'];
+      var typeLabels = {
+        'all': 'All',
+        'deposit': 'Deposit',
+        'withdraw': 'Withdraw',
+        'swap': 'Swap'
+      };
+      var index = 0;
+
+      typeRow.addEventListener('click', function() {
+        index = (index + 1) % typeOptions.length;
+        var key = typeOptions[index];
+        filters.type = key;
+        if (typeLabel) typeLabel.textContent = typeLabels[key];
+        applyFilters();
+      });
+    }
+
+    if (currencyRow) {
+      var currencyOptions = ['USDT', 'BTC', 'ETH', 'USDC', 'TRX'];
+      var currencyIndex = 0;
+
+      currencyRow.addEventListener('click', function () {
+        currencyIndex = (currencyIndex + 1) % currencyOptions.length;
+        var cur = currencyOptions[currencyIndex];
+        filters.currency = cur;
+        if (currencyLabel) currencyLabel.textContent = cur;
+        applyFilters();
+      });
+    }
+
+    loadTransactions();
+  })();
+</script>
+
+<script src="common-nav.js"></script>
+</body>
+</html>

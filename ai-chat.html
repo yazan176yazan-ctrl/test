@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AI Chat - EXARAI</title>
+  <link rel="stylesheet" href="ai-chat-style.css" />
+<style>
+.app { padding-bottom: 100px; }
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 0 30px 0;
+  background-color: #0C0B10;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.bottom-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #7b8593;
+}
+
+.bottom-icon-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.bottom-item.power .bottom-icon-img.power-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+}
+
+.bottom-item.active span {
+  color: #00d1ff;
+}
+
+@media (min-width: 480px) {
+  .bottom-nav {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 480px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="header-icon-btn">&#9776;</div>
+      <div class="app-header-title">AI Chat</div>
+      <div class="header-icon-btn">+</div>
+    </header>
+
+    <main class="app-main">
+      <div class="robot-wrap">
+        <img src="ai-chat-robot.gif" alt="AI Chat Robot" />
+      </div>
+
+      <div class="intro-text">
+        EXARAI is a next-generation large language model with powerful natural language
+        processing and intelligent interaction capabilities. It can be used for smart Q&amp;A,
+        chat interactions and many other application scenarios.
+      </div>
+
+      <div class="input-wrap">
+        <div class="chat-input-row">
+          <input
+            class="chat-input"
+            type="text"
+            placeholder="Please enter the question content"
+          />
+          <button class="send-btn" type="button">&#10148;</button>
+        </div>
+      </div>
+    </main>
+  </div>
+<nav class="bottom-nav">
+<div class="bottom-item tools">
+<img alt="AI-Tools" class="bottom-icon-img" src="images/tools-icon.png"/>
+<span>AI–Tools</span>
+</div>
+<div class="bottom-item chat">
+<img alt="AI Chat" class="bottom-icon-img" src="images/chat-icon.png"/>
+<span>AI Chat</span>
+</div>
+<div class="bottom-item power">
+<img alt="AI Power" class="bottom-icon-img power-img" src="images/ai-power.gif"/>
+<span>AI Power</span>
+</div>
+<div class="bottom-item assets active">
+<img alt="Assets" class="bottom-icon-img" src="images/assets-icon.png"/>
+<span>Assets</span>
+</div>
+<div class="bottom-item mine">
+<img alt="Mine" class="bottom-icon-img" src="images/mine-icon.png"/>
+<span>Mine</span>
+</div>
+</nav>
+<script>
+    (function() {
+      var actionMap = {
+        'Deposit': 'deposit.html',
+        'Withdraw': 'withdraw.html',
+        'Bills': 'bills.html',
+        'Swap': 'swap.html'
+      };
+
+      // System Time: live Canadian time (America/Toronto), updated every second
+      var systemTimeEl = document.querySelector('.system-label span:last-child');
+      if (systemTimeEl && window.Intl && Intl.DateTimeFormat) {
+        function formatTwo(n) {
+          return n < 10 ? '0' + n : '' + n;
+        }
+        function updateSystemTime() {
+          try {
+            var now = new Date();
+            // Get components in Canada/Eastern time zone using Intl
+            var fmt = new Intl.DateTimeFormat('en-CA', {
+              timeZone: 'America/Toronto',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            var parts = fmt.formatToParts(now).reduce(function (acc, p) {
+              acc[p.type] = p.value;
+              return acc;
+            }, {});
+            // month-day-year HH:mm:ss  => 12-03-2025 15:07:47
+            var formatted = parts.month + '-' + parts.day + '-' + parts.year + ' ' +
+                            parts.hour + ':' + parts.minute + ':' + parts.second;
+            systemTimeEl.textContent = formatted;
+          } catch (e) {
+            // fallback: browser local time if Intl/timezone unsupported
+            var d = new Date();
+            var yyyy = d.getFullYear();
+            var MM = formatTwo(d.getMonth() + 1);
+            var DD = formatTwo(d.getDate());
+            var hh = formatTwo(d.getHours());
+            var mm = formatTwo(d.getMinutes());
+            var ss = formatTwo(d.getSeconds());
+            systemTimeEl.textContent = MM + '-' + DD + '-' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
+          }
+        }
+        updateSystemTime();
+        setInterval(updateSystemTime, 1000);
+      }
+
+      // Top action buttons (Deposit / Withdraw / Bills / Swap)
+      var actions = document.querySelectorAll('.actions .action-item');
+      actions.forEach(function (item) {
+        var label = item.querySelector('span');
+        if (!label) return;
+        var text = label.textContent.trim();
+        var target = actionMap[text];
+        if (target) {
+          item.addEventListener('click', function () {
+            window.location.href = target;
+          });
+        }
+      });
+
+      // Bottom navigation bar
+      var bottomTools = document.querySelector('.bottom-nav .bottom-item.tools');
+      if (bottomTools) {
+        bottomTools.addEventListener('click', function () {
+          window.location.href = 'ai-tools.html';
+        });
+      }
+      var bottomChat = document.querySelector('.bottom-nav .bottom-item.chat');
+      if (bottomChat) {
+        bottomChat.addEventListener('click', function () {
+          window.location.href = 'ai-chat.html';
+        });
+      }
+      var bottomPower = document.querySelector('.bottom-nav .bottom-item.power');
+      if (bottomPower) {
+        bottomPower.addEventListener('click', function () {
+          window.location.href = 'ai-power.html';
+        });
+      }
+      var bottomAssets = document.querySelector('.bottom-nav .bottom-item.assets');
+      if (bottomAssets) {
+        bottomAssets.addEventListener('click', function () {
+          window.location.href = 'my-assets.html';
+        });
+      }
+      var bottomMine = document.querySelector('.bottom-nav .bottom-item.mine');
+      if (bottomMine) {
+        bottomMine.addEventListener('click', function () {
+          window.location.href = 'mine.html';
+        });
+      }
+
+      // Currency list rows
+      var rows = document.querySelectorAll('.currency-row');
+      rows.forEach(function (row) {
+        // Decide which buttons to show based on amount
+        var amountEl = row.querySelector('.currency-amount');
+        var amount = 0;
+        if (amountEl) {
+          var txt = amountEl.textContent.replace(/[^0-9.]/g, '').trim();
+          amount = parseFloat(txt) || 0;
+        }
+        var withdrawBtn = row.querySelector('.currency-btn[data-action="Withdraw"]');
+        if (withdrawBtn && amount <= 0) {
+          withdrawBtn.style.display = 'none';
+        }
+
+        // Toggle open / close on arrow click
+        var arrowBtn = row.querySelector('.currency-arrow-btn');
+        if (arrowBtn) {
+          arrowBtn.addEventListener('click', function () {
+            var isOpen = row.classList.contains('open');
+            rows.forEach(function (r) { r.classList.remove('open'); });
+            if (!isOpen) {
+              row.classList.add('open');
+            }
+          });
+        }
+
+        // Inside buttons: go to correct page
+        var buttons = row.querySelectorAll('.currency-actions .currency-btn');
+        buttons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var label = btn.getAttribute('data-action');
+            var target = actionMap[label];
+            if (target) {
+              window.location.href = target;
+            }
+          });
+        });
+      });
+})();;;
+  </script>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

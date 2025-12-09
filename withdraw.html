@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Withdraw - EXARAI</title>
+  <link rel="stylesheet" href="withdraw-style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <a href="javascript:history.back()" class="back-btn">
+        <div class="back-arrow"></div>
+      </a>
+      <div class="app-header-title">Withdraw</div>
+      <div class="header-icon">⧉</div>
+    </header>
+
+    <main class="app-main">
+      <div class="section-label">Withdrawal Currency</div>
+      <div class="select-box">
+        <span class="select-value">USDT</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="section-label">Withdrawal Network</div>
+      <div class="network-row">
+        <button type="button" class="network-pill">TRC20</button>
+      </div>
+
+      <div class="section-label">Withdrawal Address</div>
+      <div class="select-box address-row">
+        <span class="select-placeholder">Please select an address</span>
+        <div class="address-icon">👤</div>
+        <span class="chevron">▾</span>
+      </div>
+
+      <button type="button" class="add-address-btn">Add address</button>
+
+      <div class="section-label">Quantity</div>
+      <div class="select-box qty-box">
+        <input class="qty-input" id="qtyInput" type="number" min="0" step="0.01"
+               placeholder="Enter Withdrawal Quantity" />
+        <div class="qty-right">
+          <span class="qty-unit">USDT</span>
+          <span class="qty-max" id="maxLink">MAX</span>
+        </div>
+      </div>
+
+      <div class="available-row">
+        Available <span class="value" id="availableVal">3.06 USDT</span>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span>Minimum Withdrawal Quantity</span>
+          <span><span id="minQty">20</span> USDT</span>
+        </div>
+        <div class="info-row">
+          <span>Withdrawal Fee</span>
+          <span><span id="feeVal">0</span> USDT</span>
+        </div>
+        <div class="info-row">
+          <span>Received Quantity</span>
+          <span><span id="recvVal">0</span> USDT</span>
+        </div>
+      </div>
+
+      <button type="button" class="withdraw-btn" id="withdrawBtn">Withdraw</button>
+
+      <div class="reminder-title">Friendly Reminder</div>
+      <ol class="reminder-list">
+        <li>The minimum withdrawal amount is: <span class="reminder-em">20 USDT</span></li>
+        <li>Withdrawal fee: <span class="reminder-em">5%</span></li>
+        <li>Withdrawals will arrive within 2–120 hours.</li>
+        <li>After completing <span class="reminder-em">6</span> AI computing power tasks, you can apply for withdrawal.</li>
+        <li>Make sure your computer and browser are secure to prevent information from being tampered with or leaked.</li>
+        <li>Before withdrawing coins, please confirm whether the withdrawal address is safe and corresponds to the current currency. Once the address of a non‑TRC20 network is used, the platform cannot help to retrieve it. Please check carefully before withdrawing coins.</li>
+      </ol>
+    </main>
+  </div>
+
+  
+  <script>
+    (function() {{
+      var qtyInput = document.getElementById('qtyInput');
+      var feeVal = document.getElementById('feeVal');
+      var recvVal = document.getElementById('recvVal');
+      var minQty = 20;
+      var maxAvailable = 0;
+      var maxLink = document.getElementById('maxLink');
+      var withdrawBtn = document.getElementById('withdrawBtn');
+      var availableVal = document.getElementById('availableVal');
+
+      var currentUser = null;
+      var balance = 0;
+
+      if (window.ExaAuth) {{
+        currentUser = ExaAuth.getCurrentUser();
+        if (currentUser && typeof currentUser.usdtBalance === 'number') {{
+          balance = currentUser.usdtBalance;
+        }}
+      }}
+
+      maxAvailable = balance;
+      if (availableVal) {{
+        availableVal.textContent = balance.toFixed(2) + ' USDT';
+      }}
+
+      function updateValues() {{
+        var v = parseFloat(qtyInput.value);
+        if (isNaN(v) || v <= 0) {{
+          feeVal.textContent = '0';
+          recvVal.textContent = '0';
+          return;
+        }}
+        var fee = v * 0.05;
+        var received = v - fee;
+        feeVal.textContent = fee.toFixed(2);
+        recvVal.textContent = received.toFixed(2);
+      }}
+
+      if (qtyInput) {{
+        qtyInput.addEventListener('input', updateValues);
+      }}
+
+      if (maxLink) {{
+        maxLink.addEventListener('click', function() {{
+          qtyInput.value = maxAvailable.toFixed(2);
+          updateValues();
+        }});
+      }}
+
+      if (withdrawBtn) {{
+        withdrawBtn.addEventListener('click', function() {{
+          if (!window.ExaAuth || !currentUser) {{
+            alert('Internal error: user not loaded.');
+            return;
+          }}
+
+          var v = parseFloat(qtyInput.value);
+          if (isNaN(v) || v <= 0) {{
+            alert('Please enter a valid amount.');
+            return;
+          }}
+
+          if (v < minQty) {{
+            alert('The minimum withdrawal amount is ' + minQty + ' USDT.');
+            return;
+          }}
+
+          if (v > balance) {{
+            alert('Insufficient balance.');
+            return;
+          }}
+
+          var fee = v * 0.05;
+          var received = v - fee;
+
+          var tx = {{
+            id: 'wd_' + Date.now(),
+            type: 'withdraw',
+            amount: v,
+            fee: fee,
+            net: received,
+            status: 'PENDING',
+            createdAt: new Date().toISOString()
+          }};
+
+          if (typeof ExaAuth.addTransaction === 'function') {{
+            ExaAuth.addTransaction(currentUser.uid, tx);
+          }}
+
+          // Update balances: deduct from available and move to frozen
+          var frozen = typeof currentUser.frozenBalance === 'number' ? currentUser.frozenBalance : 0;
+          balance = balance - v;
+          if (balance < 0) balance = 0;
+          currentUser.usdtBalance = parseFloat(balance.toFixed(2));
+          currentUser.frozenBalance = parseFloat((frozen + v).toFixed(2));
+
+          if (typeof ExaAuth.updateUser === 'function') {{
+            ExaAuth.updateUser(currentUser);
+          }} else {{
+            // fallback
+            ExaAuth.setCurrentUser(currentUser);
+          }}
+
+          maxAvailable = balance;
+          if (availableVal) {{
+            availableVal.textContent = balance.toFixed(2) + ' USDT';
+          }}
+
+          if (qtyInput) {{
+            qtyInput.value = '';
+          }}
+          updateValues();
+
+          alert('Withdrawal request submitted and is pending review.');
+        }});
+      }}
+    }})();
+  </script>
+
+
+  <script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

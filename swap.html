@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Swap</title>
+<style>
+    :root {
+      --bg-color: #05060e;
+      --card-bg: #121622;
+      --accent: #35c2ff;
+      --accent-soft: #4de88a;
+      --text-main: #f5f5f5;
+      --text-sub: #9ba0b8;
+      --border-color: #252a3b;
+      --btn-radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        system-ui, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 40px;
+      background-color: var(--bg-color);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg-color);
+      padding: 12px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid #2d3242;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      padding: 0;
+      outline: none;
+    }
+
+    .icon-chevron {
+      width: 9px;
+      height: 16px;
+    }
+
+    .icon-small {
+      width: 14px;
+      height: 14px;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    main {
+      padding: 8px 16px 0;
+    }
+
+    .swap-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      border: 1px solid var(--border-color);
+    }
+
+    .swap-card + .swap-card {
+      margin-top: 12px;
+    }
+
+    .swap-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .swap-card-header span:first-child {
+      color: var(--text-sub);
+    }
+
+    .balance {
+      color: var(--text-sub);
+    }
+
+    .balance-value {
+      color: #3ac8ff;
+    }
+
+    .swap-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .amount-input {
+      flex: 1;
+      background: #070917;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid #272c40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 42px;
+    }
+
+    .amount-input input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .amount-input input::placeholder {
+      color: var(--text-sub);
+    }
+
+    .max-btn {
+      font-size: 13px;
+      font-weight: 600;
+      color: #21b1ff;
+      margin-right: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .token-select-wrapper {
+      position: relative;
+    }
+
+    .token-select {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #101421;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid #31374a;
+      min-width: 88px;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .token-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .token-icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .token-symbol {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .caret {
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid #7b8195;
+      border-bottom: 2px solid #7b8195;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    .token-menu {
+      position: absolute;
+      right: 0;
+      top: 38px;
+      background: #101421;
+      border-radius: 10px;
+      border: 1px solid #31374a;
+      padding: 4px 0;
+      min-width: 140px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      display: none;
+      z-index: 40;
+    }
+
+    .token-menu.open {
+      display: block;
+    }
+
+    .token-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .token-option:hover {
+      background: #181d2b;
+    }
+
+    .token-option span {
+      font-weight: 500;
+    }
+
+    .swap-middle {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .swap-middle-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #14192a;
+      border: 1px solid #252a3b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .swap-middle-circle img {
+      width: 14px;
+      height: 14px;
+    }
+
+    .swap-button {
+      margin-top: 16px;
+      margin-bottom: 14px;
+    }
+
+    .swap-button button {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: 22px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      background-image: linear-gradient(90deg, #3dd4ff, #54ffae);
+      box-shadow: 0 6px 14px rgba(33, 232, 184, 0.25);
+      cursor: pointer;
+    }
+
+    .swap-button button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .swap-info {
+      font-size: 12px;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .swap-info-row {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+<div class="header-left">
+<button aria-label="Back" class="icon-btn" onclick="window.history.back()">
+<img alt="Back" class="icon-chevron" src="images/arrow-right.png"/>
+</button>
+<div class="header-title">Swap</div>
+</div>
+<div class="header-right">
+<button aria-label="Refresh" class="icon-btn" onclick="resetForm()">
+<img alt="Refresh" src="images/price-refresh.png"/>
+</button>
+<button aria-label="Record" class="icon-btn" onclick="alert('Swap record will be available in the real backend. This is a demo.')">
+<img alt="Record" src="images/record.png"/>
+</button>
+</div>
+</header>
+<main>
+<section class="swap-card">
+<div class="swap-card-header">
+<span>From</span>
+<span class="balance">
+            Balance:
+            <span class="balance-value" id="from-balance">3.06</span>
+</span>
+</div>
+<div class="swap-row">
+<div class="amount-input">
+<input id="from-amount" type="number" min="0" step="0.0001" placeholder="0"/>
+<div style="display:flex;align-items:center;gap:4px;">
+<span class="max-btn" onclick="setMax()">MAX</span>
+<div class="token-select-wrapper" id="from-token-wrapper">
+<div class="token-select" onclick="toggleMenu('from')">
+<div class="token-icon">
+<img id="from-token-icon" alt="USDT" src="images/usdt.png"/>
+</div>
+<span class="token-symbol" id="from-token-symbol">USDT</span>
+<span class="caret"></span>
+</div>
+<div class="token-menu" id="from-token-menu">
+<div class="token-option" onclick="selectToken('from','USDT')">
+<div class="token-icon"><img src="images/usdt.png" alt="USDT"/></div>
+<span>USDT</span>
+</div>
+<div class="token-option" onclick="selectToken('from','USDC')">
+<div class="token-icon"><img src="images/usdc.png" alt="USDC"/></div>
+<span>USDC</span>
+</div>
+<div class="token-option" onclick="selectToken('from','BTC')">
+<div class="token-icon"><img src="images/btc.png" alt="BTC"/></div>
+<span>BTC</span>
+</div>
+<div class="token-option" onclick="selectToken('from','ETH')">
+<div class="token-icon"><img src="images/eth.png" alt="ETH"/></div>
+<span>ETH</span>
+</div>
+<div class="token-option" onclick="selectToken('from','TRX')">
+<div class="token-icon"><img src="images/trx.png" alt="TRX"/></div>
+<span>TRX</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="swap-middle">
+<div class="swap-middle-circle" onclick="switchTokens()">
+<img alt="Switch" src="images/arrow-right.png"/>
+</div>
+</div>
+<section class="swap-card">
+<div class="swap-card-header">
+<span>To</span>
+<span class="balance">
+            Balance:
+            <span class="balance-value" id="to-balance">0</span>
+</span>
+</div>
+<div class="swap-row">
+<div class="amount-input">
+<input id="to-amount" type="number" min="0" step="0.0001" placeholder="0" readonly/>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="token-select-wrapper" id="to-token-wrapper">
+<div class="token-select" onclick="toggleMenu('to')">
+<div class="token-icon">
+<img id="to-token-icon" alt="USDC" src="images/usdc.png"/>
+</div>
+<span class="token-symbol" id="to-token-symbol">USDC</span>
+<span class="caret"></span>
+</div>
+<div class="token-menu" id="to-token-menu">
+<div class="token-option" onclick="selectToken('to','USDT')">
+<div class="token-icon"><img src="images/usdt.png" alt="USDT"/></div>
+<span>USDT</span>
+</div>
+<div class="token-option" onclick="selectToken('to','USDC')">
+<div class="token-icon"><img src="images/usdc.png" alt="USDC"/></div>
+<span>USDC</span>
+</div>
+<div class="token-option" onclick="selectToken('to','BTC')">
+<div class="token-icon"><img src="images/btc.png" alt="BTC"/></div>
+<span>BTC</span>
+</div>
+<div class="token-option" onclick="selectToken('to','ETH')">
+<div class="token-icon"><img src="images/eth.png" alt="ETH"/></div>
+<span>ETH</span>
+</div>
+<div class="token-option" onclick="selectToken('to','TRX')">
+<div class="token-icon"><img src="images/trx.png" alt="TRX"/></div>
+<span>TRX</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="swap-button">
+<button type="button" id="swap-btn" onclick="performSwap()" disabled>Swap</button>
+</div>
+<div class="swap-info">
+<div class="swap-info-row">
+<span>Rate</span>
+<span id="rate-text">1 USDT = 1 USDC</span>
+</div>
+<div class="swap-info-row">
+<span>Expected to get</span>
+<span id="expected-text">0 USDC</span>
+</div>
+</div>
+</main>
+</div>
+<script src="common-nav.js"></script>
+<script>
+  const prices = {
+    USDT: 1,
+    USDC: 1,
+    BTC: 60000,
+    ETH: 3000,
+    TRX: 0.1
+  };
+
+  const balances = {
+    USDT: 3.06,
+    USDC: 0,
+    BTC: 0,
+    ETH: 0,
+    TRX: 0
+  };
+
+  let fromToken = 'USDT';
+  let toToken = 'USDC';
+
+  const fromAmountInput = document.getElementById('from-amount');
+  const toAmountInput = document.getElementById('to-amount');
+  const fromBalanceEl = document.getElementById('from-balance');
+  const toBalanceEl = document.getElementById('to-balance');
+  const expectedText = document.getElementById('expected-text');
+  const swapBtn = document.getElementById('swap-btn');
+  const rateText = document.getElementById('rate-text');
+
+  function parseNumber(value) {
+    const num = parseFloat(value);
+    return isNaN(num) ? 0 : num;
+  }
+
+  function formatNumber(num) {
+    return num.toFixed(6).replace(/\.?0+$/, '');
+  }
+
+  function updateBalancesUI() {
+    fromBalanceEl.textContent = formatNumber(balances[fromToken]);
+    toBalanceEl.textContent = formatNumber(balances[toToken]);
+  }
+
+  function getRate(from, to) {
+    const fromPrice = prices[from];
+    const toPrice = prices[to];
+    if (!fromPrice || !toPrice) return 0;
+    return fromPrice / toPrice;
+  }
+
+  function updateRateText() {
+    const rate = getRate(fromToken, toToken);
+    rateText.textContent = '1 ' + fromToken + ' = ' + formatNumber(rate) + ' ' + toToken;
+  }
+
+  function updateExpected() {
+    const fromBalance = balances[fromToken];
+    const amount = parseNumber(fromAmountInput.value);
+    const rate = getRate(fromToken, toToken);
+
+    if (amount > 0 && amount <= fromBalance && rate > 0) {
+      const expected = amount * rate;
+      toAmountInput.value = formatNumber(expected);
+      expectedText.textContent = formatNumber(expected) + ' ' + toToken;
+      swapBtn.disabled = false;
+    } else {
+      toAmountInput.value = '';
+      expectedText.textContent = '0 ' + toToken;
+      swapBtn.disabled = true;
+    }
+  }
+
+  function setMax() {
+    fromAmountInput.value = formatNumber(balances[fromToken]);
+    updateExpected();
+  }
+
+  function resetForm() {
+    fromAmountInput.value = '';
+    toAmountInput.value = '';
+    expectedText.textContent = '0 ' + toToken;
+    swapBtn.disabled = true;
+  }
+
+  function performSwap() {
+    const amount = parseNumber(fromAmountInput.value);
+    const fromBalance = balances[fromToken];
+    const rate = getRate(fromToken, toToken);
+
+    if (amount <= 0) {
+      alert('Please enter an amount greater than 0.');
+      return;
+    }
+    if (amount > fromBalance) {
+      alert('Amount exceeds available balance.');
+      return;
+    }
+    if (rate <= 0) {
+      alert('Invalid rate.');
+      return;
+    }
+
+    const received = amount * rate;
+
+    balances[fromToken] = fromBalance - amount;
+    balances[toToken] = balances[toToken] + received;
+
+    updateBalancesUI();
+    alert('Swap successful (demo only).');
+    resetForm();
+    updateExpected();
+  }
+
+  function selectToken(side, symbol) {
+    if (side === 'from') {
+      fromToken = symbol;
+      document.getElementById('from-token-symbol').textContent = symbol;
+      document.getElementById('from-token-icon').src = 'images/' + symbol.toLowerCase() + '.png';
+      document.getElementById('from-token-menu').classList.remove('open');
+    } else {
+      toToken = symbol;
+      document.getElementById('to-token-symbol').textContent = symbol;
+      document.getElementById('to-token-icon').src = 'images/' + symbol.toLowerCase() + '.png';
+      document.getElementById('to-token-menu').classList.remove('open');
+    }
+
+    if (fromToken === toToken) {
+      if (side === 'from') {
+        // إذا صارت متشابهة، غيّر toToken لعملة ثانية (USDC مثلاً)
+        toToken = fromToken === 'USDT' ? 'USDC' : 'USDT';
+        document.getElementById('to-token-symbol').textContent = toToken;
+        document.getElementById('to-token-icon').src = 'images/' + toToken.toLowerCase() + '.png';
+      } else {
+        fromToken = toToken === 'USDT' ? 'USDC' : 'USDT';
+        document.getElementById('from-token-symbol').textContent = fromToken;
+        document.getElementById('from-token-icon').src = 'images/' + fromToken.toLowerCase() + '.png';
+      }
+    }
+
+    updateBalancesUI();
+    updateRateText();
+    updateExpected();
+  }
+
+  function toggleMenu(side) {
+    const menuId = side === 'from' ? 'from-token-menu' : 'to-token-menu';
+    const menu = document.getElementById(menuId);
+    const otherMenu = document.getElementById(side === 'from' ? 'to-token-menu' : 'from-token-menu');
+
+    if (otherMenu.classList.contains('open')) {
+      otherMenu.classList.remove('open');
+    }
+    menu.classList.toggle('open');
+  }
+
+  function switchTokens() {
+    const temp = fromToken;
+    fromToken = toToken;
+    toToken = temp;
+
+    document.getElementById('from-token-symbol').textContent = fromToken;
+    document.getElementById('from-token-icon').src = 'images/' + fromToken.toLowerCase() + '.png';
+    document.getElementById('to-token-symbol').textContent = toToken;
+    document.getElementById('to-token-icon').src = 'images/' + toToken.toLowerCase() + '.png';
+
+    updateBalancesUI();
+    updateRateText();
+    updateExpected();
+  }
+
+  document.addEventListener('click', function (e) {
+    const fromWrapper = document.getElementById('from-token-wrapper');
+    const toWrapper = document.getElementById('to-token-wrapper');
+    const fromMenu = document.getElementById('from-token-menu');
+    const toMenu = document.getElementById('to-token-menu');
+
+    if (!fromWrapper.contains(e.target)) {
+      fromMenu.classList.remove('open');
+    }
+    if (!toWrapper.contains(e.target)) {
+      toMenu.classList.remove('open');
+    }
+  });
+
+  fromAmountInput.addEventListener('input', updateExpected);
+
+  // init
+  updateBalancesUI();
+  updateRateText();
+  updateExpected();
+</script>
+</body>
+</html>

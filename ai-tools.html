@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EXARAI - AI Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    :root {
+      --bg-main: #05060b;
+      --bg-header: #05060b;
+      --bg-card: #05060b;
+      --bg-input: #05070f;
+      --bg-pill: #05070f;
+      --bg-banner: #12c9ff;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --accent: #22e1a5;
+      --accent-2: #18c1ff;
+      --pill-active: #05070f;
+      --pill-border: #18c1ff;
+      --nav-icon: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #05060b;
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .app { min-height: 100vh; max-width: 480px; margin: 0 auto; padding: 12px 10px 100px;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 20% 20%, #22e1a5 0, #18c1ff 40%, #050816 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-icon img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .circle-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background-color: #05070f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle-btn img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 14px;
+    }
+
+    .tab {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding-bottom: 4px;
+    }
+
+    .tab-active {
+      color: #e5f7ff;
+      position: relative;
+    }
+
+    .tab-active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -4px;
+      width: 60%;
+      height: 2px;
+      border-radius: 999px;
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+    }
+
+    .hero-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .hero-title span {
+      color: #22e1a5;
+    }
+
+    .hero-sub {
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin: 0 10px 16px;
+    }
+
+    .search-wrap {
+      margin-bottom: 8px;
+    }
+
+    .search-input {
+      position: relative;
+      border-radius: 12px;
+      border: 1px solid #18c1ff;
+      background-color: var(--bg-input);
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 4px 0 10px;
+    }
+
+    .search-input input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 12px;
+    }
+
+    .search-input input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-btn {
+      width: 42px;
+      height: 34px;
+      border-radius: 10px;
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+    }
+
+    .search-btn img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .banner {
+      margin: 6px 2px 16px;
+      border-radius: 999px;
+      background-color: #18c1ff;
+      color: #020617;
+      font-size: 11px;
+      padding: 7px 14px;
+      text-align: center;
+    }
+
+    .tags-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 2px;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .pill-group {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background-color: #05070f;
+      padding: 2px;
+    }
+
+    .pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .pill.on {
+      background-color: #18c1ff22;
+      color: #e5f7ff;
+    }
+
+    .category-pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background-color: #05070f;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .category-pill.active {
+      border: 1px solid #18c1ff;
+      color: #e5f7ff;
+    }
+
+    .section-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 6px 2px;
+    }
+
+    .tool-card {
+      margin-top: 6px;
+      background-color: #05070f;
+      border-radius: 16px;
+      padding: 12px 12px 14px;
+    }
+
+    .tool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .tool-title {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .tool-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      max-width: 80%;
+    }
+
+    .tool-icon-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: #18c1ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-icon-wrap img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .tool-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .save-text {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .run-btn {
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: none;
+      background-image: linear-gradient(90deg, #18c1ff, #22e1a5);
+      color: #05060b;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding-top: 14px;
+      margin-top: 20px;
+      background: linear-gradient(to top, #05060b 85%, transparent);
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0 0;
+      border-top: 1px solid #111827;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      color: var(--nav-icon);
+    }
+
+    .nav-item-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      background-color: #05070f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-item-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .nav-item.active {
+      color: #18c1ff;
+    }
+
+    .nav-item.active .nav-item-icon {
+      background: radial-gradient(circle at 20% 20%, #22e1a5 0, #18c1ff 40%, #050816 100%);
+    }
+
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background-color: #000;
+      }
+      .app {
+        margin-top: 12px;
+        border-radius: 20px;
+        border: 1px solid #171924;
+      }
+      .bottom-nav {
+        border-radius: 0 0 20px 20px;
+      }
+    }
+  
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 0 30px 0;
+  background-color: #0C0B10;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.bottom-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #7b8593;
+}
+
+.bottom-icon-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.bottom-item.power .bottom-icon-img.power-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+}
+
+.bottom-item.active span {
+  color: #00d1ff;
+}
+
+@media (min-width: 480px) {
+  .bottom-nav {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 480px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- top logo and actions -->
+    <div class="top-row">
+      <div class="logo-wrap">
+        <div class="logo-icon">
+          <img src="files/gpt-icon-CJJzzkCX.png" alt="EXARAI" />
+        </div>
+        <div class="logo-text">EXARAI</div>
+      </div>
+      <div class="top-actions">
+        <div class="circle-btn">
+          <img src="files/reset-DWc6sqRZ.png" alt="Message" />
+        </div>
+        <div class="circle-btn">
+          <img src="files/sz-icon-DrJ7Wobt.png" alt="Notification" />
+        </div>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabs">
+      <div class="tab tab-active">AI–Tools</div>
+      <div class="tab">AI Drawing</div>
+    </div>
+
+    <!-- hero text -->
+    <h1 class="hero-title"><span>EXARAI</span></h1>
+    <p class="hero-sub">
+      Unleash your creativity, explore the future of AI. Everything it does is magical, create, interact, express your creativity,
+      bring AI into your creative world, and experience a whole new level of possibilities.
+    </p>
+
+    <!-- search -->
+    <section class="search-wrap">
+      <div class="search-input">
+        <input type="text" placeholder="280 AI tools, search for template names like: translate, article, video..." />
+        <div class="search-btn">
+          <img src="files/dbe8cabec52a15e036476ad9e7852d88.png" alt="Search" />
+        </div>
+      </div>
+    </section>
+
+    <!-- banner -->
+    <div class="banner">
+      AI tool intelligently creates high-quality content in just 1 minute.
+    </div>
+
+    <!-- tags row -->
+    <div class="tags-row">
+      <div class="pill-group">
+        <div class="pill on">All</div>
+        <div class="pill">Save</div>
+      </div>
+      <div class="category-pill active">All</div>
+      <div class="category-pill">Workplace Assistant</div>
+      <div class="category-pill">translate</div>
+      <div class="category-pill">Office</div>
+    </div>
+
+    <!-- section -->
+    <div class="section-label">translate</div>
+
+    <section class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-title">English Pronunciation Helper</div>
+          <div class="tool-desc">
+            Proficient in English pronunciation rules, focusing on helping learners improve pronunciation accuracy and fluent expression.
+          </div>
+        </div>
+        <div class="tool-icon-wrap">
+          <img src="files/chat-DZDGwjrT.gif" alt="Tool" />
+        </div>
+      </div>
+
+      <div class="tool-footer">
+        <div class="save-text">
+          <span>★</span>
+          <span>Save 1347</span>
+        </div>
+        <button class="run-btn" type="button">Run</button>
+      </div>
+    </section>
+
+    <!-- bottom navigation -->
+    <nav class="bottom-nav">
+<div class="bottom-item tools">
+<img alt="AI-Tools" class="bottom-icon-img" src="images/tools-icon.png"/>
+<span>AI–Tools</span>
+</div>
+<div class="bottom-item chat">
+<img alt="AI Chat" class="bottom-icon-img" src="images/chat-icon.png"/>
+<span>AI Chat</span>
+</div>
+<div class="bottom-item power">
+<img alt="AI Power" class="bottom-icon-img power-img" src="images/ai-power.gif"/>
+<span>AI Power</span>
+</div>
+<div class="bottom-item assets active">
+<img alt="Assets" class="bottom-icon-img" src="images/assets-icon.png"/>
+<span>Assets</span>
+</div>
+<div class="bottom-item mine">
+<img alt="Mine" class="bottom-icon-img" src="images/mine-icon.png"/>
+<span>Mine</span>
+</div>
+</nav>
+  </div>
+<script>
+    (function() {
+      var actionMap = {
+        'Deposit': 'deposit.html',
+        'Withdraw': 'withdraw.html',
+        'Bills': 'bills.html',
+        'Swap': 'swap.html'
+      };
+
+      // System Time: live Canadian time (America/Toronto), updated every second
+      var systemTimeEl = document.querySelector('.system-label span:last-child');
+      if (systemTimeEl && window.Intl && Intl.DateTimeFormat) {
+        function formatTwo(n) {
+          return n < 10 ? '0' + n : '' + n;
+        }
+        function updateSystemTime() {
+          try {
+            var now = new Date();
+            // Get components in Canada/Eastern time zone using Intl
+            var fmt = new Intl.DateTimeFormat('en-CA', {
+              timeZone: 'America/Toronto',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            var parts = fmt.formatToParts(now).reduce(function (acc, p) {
+              acc[p.type] = p.value;
+              return acc;
+            }, {});
+            // month-day-year HH:mm:ss  => 12-03-2025 15:07:47
+            var formatted = parts.month + '-' + parts.day + '-' + parts.year + ' ' +
+                            parts.hour + ':' + parts.minute + ':' + parts.second;
+            systemTimeEl.textContent = formatted;
+          } catch (e) {
+            // fallback: browser local time if Intl/timezone unsupported
+            var d = new Date();
+            var yyyy = d.getFullYear();
+            var MM = formatTwo(d.getMonth() + 1);
+            var DD = formatTwo(d.getDate());
+            var hh = formatTwo(d.getHours());
+            var mm = formatTwo(d.getMinutes());
+            var ss = formatTwo(d.getSeconds());
+            systemTimeEl.textContent = MM + '-' + DD + '-' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
+          }
+        }
+        updateSystemTime();
+        setInterval(updateSystemTime, 1000);
+      }
+
+      // Top action buttons (Deposit / Withdraw / Bills / Swap)
+      var actions = document.querySelectorAll('.actions .action-item');
+      actions.forEach(function (item) {
+        var label = item.querySelector('span');
+        if (!label) return;
+        var text = label.textContent.trim();
+        var target = actionMap[text];
+        if (target) {
+          item.addEventListener('click', function () {
+            window.location.href = target;
+          });
+        }
+      });
+
+      // Bottom navigation bar
+      var bottomTools = document.querySelector('.bottom-nav .bottom-item.tools');
+      if (bottomTools) {
+        bottomTools.addEventListener('click', function () {
+          window.location.href = 'ai-tools.html';
+        });
+      }
+      var bottomChat = document.querySelector('.bottom-nav .bottom-item.chat');
+      if (bottomChat) {
+        bottomChat.addEventListener('click', function () {
+          window.location.href = 'ai-chat.html';
+        });
+      }
+      var bottomPower = document.querySelector('.bottom-nav .bottom-item.power');
+      if (bottomPower) {
+        bottomPower.addEventListener('click', function () {
+          window.location.href = 'ai-power.html';
+        });
+      }
+      var bottomAssets = document.querySelector('.bottom-nav .bottom-item.assets');
+      if (bottomAssets) {
+        bottomAssets.addEventListener('click', function () {
+          window.location.href = 'my-assets.html';
+        });
+      }
+      var bottomMine = document.querySelector('.bottom-nav .bottom-item.mine');
+      if (bottomMine) {
+        bottomMine.addEventListener('click', function () {
+          window.location.href = 'mine.html';
+        });
+      }
+
+      // Currency list rows
+      var rows = document.querySelectorAll('.currency-row');
+      rows.forEach(function (row) {
+        // Decide which buttons to show based on amount
+        var amountEl = row.querySelector('.currency-amount');
+        var amount = 0;
+        if (amountEl) {
+          var txt = amountEl.textContent.replace(/[^0-9.]/g, '').trim();
+          amount = parseFloat(txt) || 0;
+        }
+        var withdrawBtn = row.querySelector('.currency-btn[data-action="Withdraw"]');
+        if (withdrawBtn && amount <= 0) {
+          withdrawBtn.style.display = 'none';
+        }
+
+        // Toggle open / close on arrow click
+        var arrowBtn = row.querySelector('.currency-arrow-btn');
+        if (arrowBtn) {
+          arrowBtn.addEventListener('click', function () {
+            var isOpen = row.classList.contains('open');
+            rows.forEach(function (r) { r.classList.remove('open'); });
+            if (!isOpen) {
+              row.classList.add('open');
+            }
+          });
+        }
+
+        // Inside buttons: go to correct page
+        var buttons = row.querySelectorAll('.currency-actions .currency-btn');
+        buttons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var label = btn.getAttribute('data-action');
+            var target = actionMap[label];
+            if (target) {
+              window.location.href = target;
+            }
+          });
+        });
+      });
+})();;;
+  </script>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>

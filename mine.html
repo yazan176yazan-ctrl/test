@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<title>Mine</title>
+<style>
+    :root {
+      --page-bg: #05070b;
+      --card-main: #0B2F3B;
+      --text-main: #ffffff;
+      --text-muted: #7b8593;
+      --accent: #00e4c0;
+      --border-soft: #283341;
+      --bottom-active: #00d1ff;
+      --bottom-bg: #0C0B10;
+      --item-bg: #12151d;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      background-color: var(--page-bg);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      background-color: var(--page-bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-bar {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #ffffffd9;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 12px 80px 12px;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      padding: 16px 4px 12px 4px;
+    }
+
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-phone {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .profile-id {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .profile-level {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background-color: #1b2230;
+      font-size: 11px;
+      color: #c7d2fe;
+    }
+
+    .profile-arrow {
+      font-size: 18px;
+      color: #ffffffb3;
+      padding-left: 8px;
+    }
+
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px 8px;
+      padding: 4px 0 14px 0;
+    }
+
+    .shortcut-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .shortcut-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background-color: #10141e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .shortcut-icon-wrap img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    
+    .invite-banner {
+      position: relative;
+      margin: 6px 0 16px 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .invite-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .invite-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffffff;
+      pointer-events: none;
+    }
+
+    .invite-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .invite-subtitle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .invite-go {
+      pointer-events: auto;
+      border: none;
+      padding: 2px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #00d28f;
+      color: #ffffff;
+      cursor: pointer;
+    }
+.section-list {
+      margin-top: 4px;
+    }
+
+    .section-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 4px;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background-color: #10141e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-icon img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .section-label {
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    .section-arrow {
+      font-size: 16px;
+      color: #ffffff80;
+    }
+
+    .logout-wrap {
+      margin-top: 20px;
+      padding-bottom: 16px;
+    }
+
+    .logout-btn {
+      width: 100%;
+      border-radius: 10px;
+      border: none;
+      background-color: #17202D;
+      color: #e5e7eb;
+      padding: 12px 0;
+      font-size: 14px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0 30px 0;
+      background-color: var(--bottom-bg);
+      box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .bottom-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .bottom-icon-img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+    }
+
+    .bottom-item.power .bottom-icon-img.power-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+    }
+
+    .bottom-item.active span {
+      color: var(--bottom-active);
+    }
+
+    @media (min-width: 480px) {
+      .page {
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        max-width: 480px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+<header class="nav-bar">
+<div>Mine</div>
+</header>
+<main class="content">
+<section class="profile-card">
+<div class="avatar">
+<img alt="Avatar" src="images/ec72cc3f0db8049d48f6fbcea83f4437.png"/>
+</div>
+<div class="profile-info">
+<div class="profile-phone">961 70758137</div>
+<div class="profile-id">ID: 90440407</div>
+<div class="profile-level">V0 Level</div>
+</div>
+<div class="profile-arrow">›</div>
+</section>
+<section class="shortcut-grid">
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Room task" src="images/Room%20task.png"/>
+</div>
+<span>Room task</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Member" src="images/Member.png"/>
+</div>
+<span>Member</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="My Team" src="images/My%20Team.png"/>
+</div>
+<span>My Team</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Task Center" src="images/Task%20Center.png"/>
+</div>
+<span>Task Center</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="My Works" src="images/My%20Works.png"/>
+</div>
+<span>My Works</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Tool" src="images/Tool.png"/>
+</div>
+<span>Tool</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Run record" src="images/Run%20record.png"/>
+</div>
+<span>Run record</span>
+</div>
+<div class="shortcut-item">
+<div class="shortcut-icon-wrap">
+<img alt="Content" src="images/Content.png"/>
+</div>
+<span>Content</span>
+</div>
+</section>
+<div class="invite-banner">
+<img alt="Invite Friends" src="images/invite-icon-S4SotH5Q.png"/>
+<div class="invite-content">
+<div class="invite-title">Invite Friends</div>
+<div class="invite-subtitle">
+<span>Earn more rewards</span>
+<button class="invite-go">Go</button>
+</div>
+</div>
+</div>
+<section class="section-list">
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Lucky draw" src="images/Lucky%20draw.png"/>
+</div>
+<span class="section-label">Lucky draw</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Security Center" src="images/Security%20Center.png"/>
+</div>
+<span class="section-label">Security Center</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Site message" src="images/Site%20message.png"/>
+</div>
+<span class="section-label">Site message</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Help Center" src="images/Help%20Center.png"/>
+</div>
+<span class="section-label">Help Center</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Clear Cache" src="images/Clear%20Cache.png"/>
+</div>
+<span class="section-label">Clear Cache</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Theme" src="images/Theme.png"/>
+</div>
+<span class="section-label">Theme</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="About Us" src="images/About%20Us.png"/>
+</div>
+<span class="section-label">About Us</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Switch language" src="images/icon-18-RHnDR78D.png"/>
+</div>
+<span class="section-label">Switch language</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="Online customer service" src="images/icon-17-CMs7hPtH.png"/>
+</div>
+<span class="section-label">Online customer service</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+<div class="section-item">
+<div class="section-left">
+<div class="section-icon">
+<img alt="APP download" src="images/icon-10-DeYOj72H.png"/>
+</div>
+<span class="section-label">APP download</span>
+</div>
+<div class="section-arrow">›</div>
+</div>
+</section>
+<div class="logout-wrap">
+<button class="logout-btn" type="button">Log Out</button>
+</div>
+</main>
+<nav class="bottom-nav">
+<div class="bottom-item tools">
+<img alt="AI-Tools" class="bottom-icon-img" src="images/tools-icon.png"/>
+<span>AI–Tools</span>
+</div>
+<div class="bottom-item chat">
+<img alt="AI Chat" class="bottom-icon-img" src="images/chat-icon.png"/>
+<span>AI Chat</span>
+</div>
+<div class="bottom-item power">
+<img alt="AI Power" class="bottom-icon-img power-img" src="images/ai-power.gif"/>
+<span>AI Power</span>
+</div>
+<div class="bottom-item assets">
+<img alt="Assets" class="bottom-icon-img" src="images/assets-icon.png"/>
+<span>Assets</span>
+</div>
+<div class="bottom-item mine active">
+<img alt="Mine" class="bottom-icon-img" src="images/mine-icon.png"/>
+<span>Mine</span>
+</div>
+</nav>
+</div>
+<script>
+    (function() {
+      var profileCard = document.querySelector('.profile-card');
+      if (profileCard) {
+        profileCard.addEventListener('click', function () {
+          window.location.href = 'account-information.html';
+        });
+      }
+
+      var shortcutMap = {
+        'Room task': 'room-task.html',
+        'Member': 'member.html',
+        'My Team': 'my-team.html',
+        'Task Center': 'task-center.html',
+        'My Works': 'my-works.html',
+        'Tool': 'tool.html',
+        'Run record': 'bills.html',
+        'Content': 'content.html'
+      };
+
+      var shortcuts = document.querySelectorAll('.shortcut-item');
+      shortcuts.forEach(function (item) {
+        var label = item.querySelector('span');
+        if (!label) return;
+        var text = label.textContent.trim();
+        var target = shortcutMap[text];
+        if (target) {
+          item.addEventListener('click', function () {
+            window.location.href = target;
+          });
+        }
+      });
+
+      var inviteBtn = document.querySelector('.invite-banner .invite-go');
+      if (inviteBtn) {
+        inviteBtn.addEventListener('click', function () {
+          window.location.href = 'invite.html';
+        });
+      }
+
+      var sectionMap = {
+        'Lucky draw': 'lucky-draw.html',
+        'Security Center': 'security-center.html',
+        'Site message': 'site-message.html',
+        'Help Center': 'help-center.html',
+        'About Us': 'about-us.html',
+        'Theme': 'theme.html',
+        'Switch language': 'choose-language.html',
+        'Online customer service': 'help-center.html'
+      };
+
+      var sectionItems = document.querySelectorAll('.section-item');
+      sectionItems.forEach(function (item) {
+        var label = item.querySelector('.section-label');
+        if (!label) return;
+        var text = label.textContent.trim();
+        if (text === 'Clear Cache') {
+          item.addEventListener('click', function () {
+            window.location.reload();
+          });
+          return;
+        }
+        if (text === 'APP download') {
+          return;
+        }
+        var target = sectionMap[text];
+        if (target) {
+          item.addEventListener('click', function () {
+            window.location.href = target;
+          });
+        }
+      });
+
+      var logoutBtn = document.querySelector('.logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          window.location.href = 'login.html';
+        });
+      }
+
+      var bottomTools = document.querySelector('.bottom-nav .bottom-item.tools');
+      if (bottomTools) {
+        bottomTools.addEventListener('click', function () {
+          window.location.href = 'ai-tools.html';
+        });
+      }
+      var bottomChat = document.querySelector('.bottom-nav .bottom-item.chat');
+      if (bottomChat) {
+        bottomChat.addEventListener('click', function () {
+          window.location.href = 'ai-chat.html';
+        });
+      }
+      var bottomPower = document.querySelector('.bottom-nav .bottom-item.power');
+      if (bottomPower) {
+        bottomPower.addEventListener('click', function () {
+          window.location.href = 'ai-power.html';
+        });
+      }
+      var bottomAssets = document.querySelector('.bottom-nav .bottom-item.assets');
+      if (bottomAssets) {
+        bottomAssets.addEventListener('click', function () {
+          window.location.href = 'my-assets.html';
+        });
+      }
+      var bottomMine = document.querySelector('.bottom-nav .bottom-item.mine');
+      if (bottomMine) {
+        bottomMine.addEventListener('click', function () {
+          window.location.href = 'mine.html';
+        });
+      }
+    })();
+  </script>
+<script src="auth.js"></script>
+<script src="common-nav.js"></script>
+</body>
+</html>
